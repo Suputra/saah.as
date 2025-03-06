@@ -1,3 +1,21 @@
 @use "./base.scss";
 
 // put your custom CSS here!
+
+/* Custom styling for ASCII art */
+.ascii-art {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.4rem;
+  line-height: 1;
+  white-space: pre;
+  overflow-x: auto;
+  display: block;
+  padding: 0.5rem;
+  margin: 1rem auto;
+  max-width: 100%;
+  word-break: keep-all;
+  word-wrap: normal;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
