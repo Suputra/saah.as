@@ -45,6 +45,16 @@ Now you can add packages as usual with:
 uv pip install torch
 ```
 and they will install to your venv
+
+## requirements
+Keep a track of all your packages with:
+```
+uv pip freeze > requirements.txt
+```
+install packages from requirements with
+```
+uv pip install -r requirements.txt
+```
 ## installing
 just run:
 ```
