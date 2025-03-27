@@ -24,9 +24,36 @@ then run it with
 ```
 ./test.py
 ```
-### installing
+## auto-venvs
+I also find it convenient to create venvs that automatically activate when you enter a folder, and deactivate when you exit - no need to deal with activating or deactivating.
+
+To do this, first create the venv with the following:
+```
+uv venv
+```
+Then create an `.envrc` file with the following:
+```
+echo "source .venv/bin/activate" > .envrc
+```
+Then allow direnv in the directory:
+```
+direnv allow .
+```
+
+Now you can add packages as usual with:
+```
+uv pip install torch
+```
+and they will install to your venv
+## installing
 just run:
 ```
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 see https://docs.astral.sh/uv/getting-started/installation/ for more info.
+
+for direnv, run:
+```
+curl -sfL https://direnv.net/install.sh | bash
+```
+from https://direnv.net/docs/installation.html.

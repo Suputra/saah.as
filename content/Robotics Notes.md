@@ -1,0 +1,1 @@
+- thinking, sensing, and acting happens in parallel, with information shared between them - think in a control theory sense
