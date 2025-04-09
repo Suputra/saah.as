@@ -16,7 +16,14 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
     for (const [_tree, file] of content) {
       const dir = path.posix.relative(argv.directory, path.dirname(file.data.filePath!))
       const aliases = file.data.frontmatter?.aliases ?? []
-      const slugs = aliases.map((alias) => path.posix.join(dir, alias) as FullSlug)
+      const slugs: FullSlug[] = []
+      for (const alias of aliases) {
+        if (alias.startsWith("http://") || alias.startsWith("https://")) {
+          slugs.push(alias as FullSlug)
+        } else {
+          slugs.push(path.posix.join(dir, alias) as FullSlug)
+        }
+      }
       const permalink = file.data.frontmatter?.permalink
       if (typeof permalink === "string") {
         slugs.push(permalink as FullSlug)
@@ -42,19 +49,30 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
       const ogSlug = simplifySlug(file.data.slug!)
       const dir = path.posix.relative(argv.directory, path.dirname(file.data.filePath!))
       const aliases = file.data.frontmatter?.aliases ?? []
-      const slugs: FullSlug[] = aliases.map((alias) => path.posix.join(dir, alias) as FullSlug)
+      const slugs: FullSlug[] = []
+      for (const alias of aliases) {
+        if (alias.startsWith("http://") || alias.startsWith("https://")) {
+          slugs.push(alias as FullSlug)
+        } else {
+          slugs.push(path.posix.join(dir, alias) as FullSlug)
+        }
+      }
       const permalink = file.data.frontmatter?.permalink
       if (typeof permalink === "string") {
         slugs.push(permalink as FullSlug)
       }
 
       for (let slug of slugs) {
-        // fix any slugs that have trailing slash
-        if (slug.endsWith("/")) {
+        // fix trailing slash for internal aliases
+        // (not relevant for external, but doesn't harm if they ended with '/')
+        if (!slug.startsWith("http") && slug.endsWith("/")) {
           slug = joinSegments(slug, "index") as FullSlug
         }
 
-        const redirUrl = resolveRelative(slug, file.data.slug!)
+        // If the slug is a valid URL, use it directly; otherwise do the normal resolve
+        const isExternal = slug.startsWith("http://") || slug.startsWith("https://")
+        const redirUrl = isExternal ? slug : resolveRelative(slug, file.data.slug!)
+
         const fp = await write({
           ctx,
           content: `
@@ -69,7 +87,9 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
             </head>
             </html>
             `,
-          slug,
+          slug: isExternal
+            ? joinSegments("ext", encodeURIComponent(slug)) as FullSlug
+            : slug,
           ext: ".html",
         })
 
