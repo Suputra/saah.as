@@ -1,0 +1,1 @@
+by default, I see all projects as hardware / robotics projects - other projects will be put into 

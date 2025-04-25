@@ -1,3 +1,5 @@
 ---
-draft: "true"
+draft: 
+tags:
+  - robots
 ---

@@ -1,0 +1,1 @@
+these are some pure software projects I've had
