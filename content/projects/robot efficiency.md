@@ -41,13 +41,7 @@ Maybe these can meet eventually, but they are somewhat different to start.
 
 To some extent the robot efficiency idea is really only related to the fixed trajectory thing - and the idea of using more parallel manipulators instead of just serial manipulators. Also, we can merge together the automatic creation of base units from idea 2 with this fixed trajectory idea. dynamic trajectories and small robots can be handled later. 
 
-
-
-
-
-
-
-
+Could this be enhanced by using protein folding techniques? we also will be using some base building blocks and are exploring a huge possibility space with a few simple blocks
 
 
 
