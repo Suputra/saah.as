@@ -10,7 +10,7 @@ This is a good visual representation of what we're trying to do:
 
 (source: [Wikipedia](https://en.wikipedia.org/wiki/Fourier_transform#/media/File:Fourier_transform_time_and_frequency_domains_(small).gif))
 
-How do we go from time to frequency? This is the answer that the fourier transform aims to solve. It's defined below:
+How do we go from time to frequency? This is the question that the fourier transform aims to answer. It's defined below:
 $$
 F(\omega) = \int_{-\infty}^{\infty} f(t) e^{-i\omega t} dt
 $$
