@@ -5,6 +5,8 @@ We experience time linearly, moving forward. Therefore, we collect a lot of time
 Frequency domain visualization can be really useful for extracting insights from a wave like above. Signals like the above show periodicity, but it may not be apparent exactly what the characteristics of that periodicity are
 ![[Screenshot 2025-04-26 at 1.11.29 PM.png]]
 
+(Above two from a [claude artifact](https://claude.ai/public/artifacts/e60fa027-73eb-4779-b1cf-148a00a9c672))
+
 This is a good visual representation of what we're trying to do:
 
 ![[Fourier_transform_time_and_frequency_domains_(small).gif]]
@@ -36,6 +38,8 @@ so for any given frequency, what we're doing is multiplying our function by a si
 Sin and cosine is that they can be seen as the fundamental periodic functions - when we multiply our function by a sin + cos wave at a certain frequency, we get a complex value that (once we take the magnitude of it), gives us the "power" of the time signal at that frequency. This is the computation that this function describes at a single frequency. 
 ![[Screenshot 2025-04-26 at 2.07.34 PM.png]]
 ![[Screenshot 2025-04-26 at 2.09.01 PM.png]]
+
+(From a [claude artifact](https://claude.ai/public/artifacts/845b39ea-d98e-4782-8497-da75c648d3f7))
 
 So how do we use this practically? We can't exactly integrate across infinity for each frequency, can we? This is where the DFT comes in.
 
