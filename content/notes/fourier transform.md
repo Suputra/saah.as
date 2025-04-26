@@ -1,4 +1,5 @@
 For knowledge sharing club - 4/26/25
+
 We experience time linearly, moving forward. Therefore, we collect a lot of time domain (time series) data - but frequently (no pun intended) it's useful to see that from a different perspective - in the frequency domain.
 ![[Screenshot 2025-04-26 at 1.11.02 PM.png]]
 Frequency domain visualization can be really useful for extracting insights from a wave like above. Signals like the above show periodicity, but it may not be apparent exactly what the characteristics of that periodicity are
