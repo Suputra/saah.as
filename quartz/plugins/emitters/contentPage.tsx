@@ -83,11 +83,13 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
           containsIndex = true
         }
 
-        // only process home page, non-tag pages, and non-index pages
-        // also skip pages marked with skipContent
+        // Skip pages that are index pages, tag pages, or have redirect/skipContent flags
         if (slug.endsWith("/index") || 
             slug.startsWith("tags/") || 
-            file.data.frontmatter?.skipContent === true) continue
+            file.data.frontmatter?.skipContent === true ||
+            file.data.frontmatter?.redirect) {
+          continue;
+        }
             
         yield processContent(ctx, tree, file.data, allFiles, opts, resources)
       }
@@ -117,7 +119,8 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         if (!changedSlugs.has(slug)) continue
         if (slug.endsWith("/index") || 
             slug.startsWith("tags/") || 
-            file.data.frontmatter?.skipContent === true) continue
+            file.data.frontmatter?.skipContent === true ||
+            file.data.frontmatter?.redirect) continue
 
         yield processContent(ctx, tree, file.data, allFiles, opts, resources)
       }

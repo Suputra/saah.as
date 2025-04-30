@@ -64,7 +64,7 @@ async function* processFile(ctx: BuildCtx, file: VFile) {
 export const RedirectPages: QuartzEmitterPlugin = () => ({
   name: "RedirectPages",
   // Give this plugin higher priority to run before ContentPage
-  priority: 1,
+  priority: 99,
   async *emit(ctx, content, resources) {
     for (const [_tree, file] of content) {
       yield* processFile(ctx, file)
