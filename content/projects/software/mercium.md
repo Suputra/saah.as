@@ -1,3 +1,5 @@
+Was messing around with some ideas for a simple app, the following are prompts I used to try and get something I wanted:
+
 I want to design a simple cross platform PWA / website that allows users to very easily sell items. I thought of this idea after getting annoyed at the work that it takes to sell items when trying to move. You have to take pictures, determine brand names, product details, and condition, and find a possible price to sell it for. After that, you have to create a listing and manage messages with prospective buyers.
 
 This app can offload both of these areas of work:
