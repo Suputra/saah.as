@@ -3,7 +3,7 @@
 > [!note] History
  > This is a paper I wrote in school - I was trying to learn about the mathematical basis of Neural Networks. It needs an update and a reformatting, but I'm proud of it for its time
 
-_Examine the role of mathematics, and more specifically, calculus and finding relative minima, used in the creation and training of Neural Networks. How can this underlying mathematics help one to understand how a Neural Network works?_
+Examine the role of mathematics, and more specifically, calculus and finding relative minima, used in the creation and training of Neural Networks. How can this underlying mathematics help one to understand how a Neural Network works?_
 
 **Subject Area:** Mathematics  
 **Word Count:** 3632 Words  

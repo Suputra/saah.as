@@ -1,11 +1,10 @@
 For knowledge sharing club - 4/26/25
 
 We experience time linearly, moving forward. Therefore, we collect a lot of time domain (time series) data - but frequently (no pun intended) it's useful to see that from a different perspective - in the frequency domain.
-![[Screenshot 2025-04-26 at 1.11.02 PM.png]]
-Frequency domain visualization can be really useful for extracting insights from a wave like above. Signals like the above show periodicity, but it may not be apparent exactly what the characteristics of that periodicity are
-![[Screenshot 2025-04-26 at 1.11.29 PM.png]]
 
-(Above two from a [claude artifact](https://claude.ai/public/artifacts/e60fa027-73eb-4779-b1cf-148a00a9c672))
+<iframe src="../interactive/sinewaves.html" width="100%" height="400" frameborder="0" scrolling="no" style="border-radius: 8px; border: 1px solid #ddd;"></iframe>
+
+Frequency domain visualization can be really useful for extracting insights from a wave like above. Signals like the above show periodicity, but it may not be apparent exactly what the characteristics of that periodicity are. In the interactive above, looking at the purple wave, it's not immediately obvious what primitive sine waves compose it.
 
 This is a good visual representation of what we're trying to do:
 
@@ -36,10 +35,8 @@ so for any given frequency, what we're doing is multiplying our function by a si
 (source [Wikipedia](https://commons.wikimedia.org/wiki/File:Circle_cos_sin.gif#mw-jump-to-license))
 
 Sin and cosine is that they can be seen as the fundamental periodic functions - when we multiply our function by a sin + cos wave at a certain frequency, we get a complex value that (once we take the magnitude of it), gives us the "power" of the time signal at that frequency. This is the computation that this function describes at a single frequency. 
-![[Screenshot 2025-04-26 at 2.07.34 PM.png]]
-![[Screenshot 2025-04-26 at 2.09.01 PM.png]]
 
-(From a [claude artifact](https://claude.ai/public/artifacts/845b39ea-d98e-4782-8497-da75c648d3f7))
+<iframe src="../interactive/sinmultiply.html" width="100%" height="600" frameborder="0" scrolling="no" style="border-radius: 8px; border: 1px solid #ddd;"></iframe>
 
 So how do we use this practically? We can't exactly integrate across infinity for each frequency, can we? This is where the DFT comes in.
 
