@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Multiplication</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            background: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="range"] {
+            flex: 1;
+            min-width: 400px;
+        }
+        .chart-container {
+            position: relative;
+            height: 250px;
+            margin-bottom: 10px;
+        }
+        .spectrum-container {
+            position: relative;
+            height: 220px;
+        }
+        .integral-display {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .strong { color: #16a085; }
+        .weak { color: #f39c12; }
+        .none { color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <div class="slider-group">
+                <div class="slider-header">
+                    <label>Test Frequency:</label>
+                    <span id="freqValue">3.0 Hz</span>
+                </div>
+                <input type="range" id="freqSlider" min="0" max="10" step="0.1" value="3">
+            </div>
+            <div class="radio-group">
+                <label><input type="radio" name="waveType" value="cos" checked> Cosine</label>
+                <label><input type="radio" name="waveType" value="sin"> Sine</label>
+            </div>
+            <div class="integral-display" id="integralDisplay">Average: 0.00</div>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="signalChart"></canvas>
+        </div>
+        
+        <div class="spectrum-container">
+            <canvas id="spectrumChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let signalChart, spectrumChart;
+        let selectedFrequency = 3.0;
+        let useCosineTerm = true;
+        const points = 200;
+        const range = Math.PI * 4;
+
+        // Signal generation functions
+        function generateSignal(t) {
+            return 0.5 * Math.sin(2 * t) + 0.8 * Math.sin(5 * t) + 0.3 * Math.sin(8 * t);
+        }
+
+        function generateTestWave(t, freq) {
+            return useCosineTerm ? Math.cos(freq * t) : Math.sin(freq * t);
+        }
+
+        function generateProduct(t, freq) {
+            return generateSignal(t) * generateTestWave(t, freq);
+        }
+
+        function generateData() {
+            const timeData = [];
+            const signalData = [];
+            const testWaveData = [];
+            const productData = [];
+            let integralSum = 0;
+
+            for (let i = 0; i < points; i++) {
+                const t = (i / points) * range;
+                const signal = generateSignal(t);
+                const testWave = generateTestWave(t, selectedFrequency);
+                const product = generateProduct(t, selectedFrequency);
+                
+                timeData.push(t);
+                signalData.push(signal);
+                testWaveData.push(testWave);
+                productData.push(product);
+                
+                integralSum += product * (range / points);
+            }
+
+            return {
+                timeData,
+                signalData,
+                testWaveData,
+                productData,
+                integral: integralSum / Math.PI
+            };
+        }
+
+        function generateSpectrumData() {
+            const freqData = [];
+            const ampData = [];
+
+            for (let freq = 0; freq <= 10; freq += 0.1) {
+                let sum = 0;
+                for (let i = 0; i < points; i++) {
+                    const t = (i / points) * range;
+                    const testTerm = useCosineTerm ? Math.cos(freq * t) : Math.sin(freq * t);
+                    sum += generateSignal(t) * testTerm * (range / points);
+                }
+                freqData.push(freq);
+                ampData.push(Math.abs(sum / Math.PI));
+            }
+
+            return { freqData, ampData };
+        }
+
+        function generateIndicatorData() {
+            const indicatorData = [];
+            let currentAmplitude = 0;
+            
+            // Calculate the amplitude at the current frequency
+            let sum = 0;
+            for (let i = 0; i < points; i++) {
+                const t = (i / points) * range;
+                const testTerm = useCosineTerm ? Math.cos(selectedFrequency * t) : Math.sin(selectedFrequency * t);
+                sum += generateSignal(t) * testTerm * (range / points);
+            }
+            currentAmplitude = Math.abs(sum / Math.PI);
+            
+            // Create indicator data with null values except at the current frequency
+            for (let freq = 0; freq <= 10; freq += 0.1) {
+                if (Math.abs(freq - selectedFrequency) < 0.05) {
+                    indicatorData.push(currentAmplitude);
+                } else {
+                    indicatorData.push(null);
+                }
+            }
+            return indicatorData;
+        }
+
+        function updateCharts() {
+            const data = generateData();
+            
+            // Update signal chart
+            signalChart.data.datasets[0].data = data.signalData;
+            signalChart.data.datasets[1].data = data.testWaveData;
+            signalChart.data.datasets[2].data = data.productData;
+            signalChart.data.datasets[3].data = new Array(points).fill(data.integral);
+            signalChart.data.datasets[1].label = `${useCosineTerm ? 'Cosine' : 'Sine'} (${selectedFrequency.toFixed(1)} Hz)`;
+            signalChart.update('none');
+
+            // Update integral display
+            const integralEl = document.getElementById('integralDisplay');
+            const absIntegral = Math.abs(data.integral);
+            integralEl.textContent = `Average: ${data.integral.toFixed(2)}`;
+            
+            if (absIntegral > 0.2) {
+                integralEl.className = 'integral-display strong';
+            } else if (absIntegral > 0.05) {
+                integralEl.className = 'integral-display weak';
+            } else {
+                integralEl.className = 'integral-display none';
+            }
+
+            // Update spectrum chart
+            const spectrumData = generateSpectrumData();
+            spectrumChart.data.datasets[0].data = spectrumData.ampData;
+            spectrumChart.data.datasets[1].data = generateIndicatorData();
+            spectrumChart.update('none');
+        }
+
+        function initCharts() {
+            const data = generateData();
+            const spectrumData = generateSpectrumData();
+
+            // Time domain chart
+            const ctx1 = document.getElementById('signalChart').getContext('2d');
+            signalChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: data.timeData.map(t => (t / Math.PI).toFixed(1) + 'π'),
+                    datasets: [{
+                        label: 'Signal',
+                        data: data.signalData,
+                        borderColor: '#8884d8',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }, {
+                        label: 'Cosine (3.0 Hz)',
+                        data: data.testWaveData,
+                        borderColor: '#82ca9d',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }, {
+                        label: 'Product',
+                        data: data.productData,
+                        borderColor: '#ff7300',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        borderWidth: 3
+                    }, {
+                        label: 'Average',
+                        data: new Array(points).fill(data.integral),
+                        borderColor: '#ff0000',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: -2,
+                            max: 2
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Frequency domain chart
+            const ctx2 = document.getElementById('spectrumChart').getContext('2d');
+            spectrumChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: spectrumData.freqData.map(f => f.toFixed(1)),
+                    datasets: [{
+                        label: 'Amplitude',
+                        data: spectrumData.ampData,
+                        borderColor: '#ff0000',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }, {
+                        label: 'Current Frequency',
+                        data: generateIndicatorData(),
+                        borderColor: '#ff0000',
+                        backgroundColor: '#ff0000',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        borderWidth: 0,
+                        showLine: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 1.8
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Event listeners
+        document.getElementById('freqSlider').addEventListener('input', function(e) {
+            selectedFrequency = parseFloat(e.target.value);
+            document.getElementById('freqValue').textContent = selectedFrequency.toFixed(1) + ' Hz';
+            updateCharts();
+        });
+
+                    var radios = document.querySelectorAll('input[name="waveType"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].addEventListener('change', function(e) {
+                    useCosineTerm = e.target.value === 'cos';
+                    updateCharts();
+                });
+            }
+
+        // Initialize
+        window.addEventListener('load', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>
