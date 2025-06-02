@@ -85,11 +85,6 @@
             width: 100%;
             min-width: 200px;
         }
-        .selected-wave-info {
-            font-size: 14px;
-            color: #666;
-            font-weight: 500;
-        }
         .wave-info {
             display: flex;
             flex-wrap: wrap;
@@ -140,9 +135,6 @@
             </div>
             <input type="range" id="frequencySlider" min="1" max="10" step="0.1" value="1">
         </div>
-        <div class="selected-wave-info" id="selectedWaveInfo">
-            Select a wave to adjust
-        </div>
     </div>
     
     <canvas id="canvas" width="700" height="300"></canvas>
@@ -160,7 +152,6 @@
         const frequencySlider = document.getElementById('frequencySlider');
         const amplitudeValue = document.getElementById('amplitudeValue');
         const frequencyValue = document.getElementById('frequencyValue');
-        const selectedWaveInfo = document.getElementById('selectedWaveInfo');
         
         // Wave data structure
         let waves = [];
@@ -247,15 +238,11 @@
                 frequencySlider.value = selectedWave.frequency;
                 amplitudeValue.textContent = selectedWave.amplitude;
                 frequencyValue.textContent = selectedWave.frequency;
-                selectedWaveInfo.textContent = `Wave ${selectedWave.id}`;
-                selectedWaveInfo.style.color = selectedWave.color;
             } else {
                 amplitudeSlider.value = 50;
                 frequencySlider.value = 1;
                 amplitudeValue.textContent = '50';
                 frequencyValue.textContent = '1.0';
-                selectedWaveInfo.textContent = 'Select a wave to adjust';
-                selectedWaveInfo.style.color = '#666';
             }
         }
         
