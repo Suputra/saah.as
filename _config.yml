@@ -1,0 +1,22 @@
+# GitHub Pages Jekyll configuration
+plugins:
+  - jekyll-optional-front-matter
+
+# Include files without extensions
+include:
+  - "_*"
+
+# Exclude build files
+exclude:
+  - node_modules/
+  - "*.json"
+  - "*.ts"
+  - quartz/
+  - .quartz-cache/
+
+# Serve files without extensions as HTML
+defaults:
+  - scope:
+      path: "interactive"
+    values:
+      permalink: /:path/ 
