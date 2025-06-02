@@ -2,7 +2,7 @@ For knowledge sharing club - 4/26/25
 
 We experience time linearly, moving forward. Therefore, we collect a lot of time domain (time series) data - but frequently (no pun intended) it's useful to see that from a different perspective - in the frequency domain.
 
-<iframe src="../interactive/sinewaves" width="100%" height="400" frameborder="0" scrolling="no" style="border-radius: 8px; border: 1px solid #ddd;"></iframe>
+<iframe src="../interactive/sinewaves" width="100%" height="450" frameborder="0" scrolling="no" style="border-radius: 8px; border: 1px solid #ddd;"></iframe>
 
 Frequency domain visualization can be really useful for extracting insights from a wave like above. Signals like the above show periodicity, but it may not be apparent exactly what the characteristics of that periodicity are. In the interactive above, looking at the purple wave, it's not immediately obvious what primitive sine waves compose it.
 

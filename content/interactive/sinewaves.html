@@ -20,7 +20,6 @@
         canvas {
             border: 1px solid #ddd;
             display: block;
-            cursor: crosshair;
             width: 100%;
             max-width: 700px;
             margin: 0 auto;
@@ -59,6 +58,38 @@
             background-color: #f8d7da;
             border-color: #f1aeb5;
         }
+        .slider-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 700px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 200px;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        input[type="range"] {
+            width: 100%;
+            min-width: 200px;
+        }
+        .selected-wave-info {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
         .wave-info {
             display: flex;
             flex-wrap: wrap;
@@ -94,6 +125,26 @@
         <button class="control-btn delete-btn" onclick="deleteLastWave()" title="Delete Wave">Delete</button>
     </div>
     
+    <div class="slider-controls">
+        <div class="slider-group">
+            <div class="slider-header">
+                <label>Amplitude:</label>
+                <span id="amplitudeValue">50</span>
+            </div>
+            <input type="range" id="amplitudeSlider" min="0" max="100" step="1" value="50">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header">
+                <label>Frequency:</label>
+                <span id="frequencyValue">1.0</span>
+            </div>
+            <input type="range" id="frequencySlider" min="1" max="10" step="0.1" value="1">
+        </div>
+        <div class="selected-wave-info" id="selectedWaveInfo">
+            Select a wave to adjust
+        </div>
+    </div>
+    
     <canvas id="canvas" width="700" height="300"></canvas>
     
     <div class="wave-info" id="wave-info">
@@ -105,16 +156,16 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const waveInfoContainer = document.getElementById('wave-info');
+        const amplitudeSlider = document.getElementById('amplitudeSlider');
+        const frequencySlider = document.getElementById('frequencySlider');
+        const amplitudeValue = document.getElementById('amplitudeValue');
+        const frequencyValue = document.getElementById('frequencyValue');
+        const selectedWaveInfo = document.getElementById('selectedWaveInfo');
         
         // Wave data structure
         let waves = [];
         let nextWaveId = 1;
         let selectedWave = null;
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let originalAmplitude = 0;
-        let originalFrequency = 0;
         
         // Colors for different waves
         const waveColors = [
@@ -140,6 +191,9 @@
             };
             
             waves.push(wave);
+            
+            // Select the new wave
+            selectWave(waveId);
             update();
         }
         
@@ -147,6 +201,7 @@
             if (waves.length > 1) {
                 waves.pop();
                 selectedWave = null;
+                updateSliders();
                 update();
             }
         }
@@ -161,21 +216,8 @@
             addWave();
             waves[1].amplitude = 30;
             waves[1].frequency = 2;
+            selectWave(1); // Select first wave
             update();
-        }
-        
-        function findWaveAtPosition(x, y) {
-            const centerY = canvas.height / 2;
-            const tolerance = 15; // pixels
-            
-            // Check each wave to see if the mouse is close to it
-            for (let wave of waves) {
-                const waveY = centerY - wave.amplitude * Math.sin(wave.frequency * (x / 50) * Math.PI);
-                if (Math.abs(y - waveY) < tolerance) {
-                    return wave;
-                }
-            }
-            return null;
         }
         
         function updateWaveInfo() {
@@ -195,64 +237,52 @@
         
         function selectWave(waveId) {
             selectedWave = waves.find(wave => wave.id === waveId);
+            updateSliders();
             update();
         }
         
-        // Mouse event handlers
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const wave = findWaveAtPosition(x, y);
-            if (wave) {
-                selectedWave = wave;
-                isDragging = true;
-                dragStartX = x;
-                dragStartY = y;
-                originalAmplitude = wave.amplitude;
-                originalFrequency = wave.frequency;
-                canvas.style.cursor = 'grabbing';
-            }
-        });
-        
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            if (isDragging && selectedWave) {
-                // Vertical drag changes amplitude
-                const deltaY = dragStartY - y;
-                const newAmplitude = Math.max(0, Math.min(100, originalAmplitude + deltaY * 0.5));
-                
-                // Horizontal drag changes frequency
-                const deltaX = x - dragStartX;
-                const newFrequency = Math.max(1, Math.min(10, originalFrequency + deltaX * 0.02));
-                
-                selectedWave.amplitude = Math.round(newAmplitude);
-                selectedWave.frequency = Math.round(newFrequency * 10) / 10;
-                
-                update();
+        function updateSliders() {
+            if (selectedWave) {
+                amplitudeSlider.value = selectedWave.amplitude;
+                frequencySlider.value = selectedWave.frequency;
+                amplitudeValue.textContent = selectedWave.amplitude;
+                frequencyValue.textContent = selectedWave.frequency;
+                selectedWaveInfo.textContent = `Wave ${selectedWave.id}`;
+                selectedWaveInfo.style.color = selectedWave.color;
             } else {
-                // Change cursor based on what's under the mouse
-                const wave = findWaveAtPosition(x, y);
-                canvas.style.cursor = wave ? 'grab' : 'crosshair';
+                amplitudeSlider.value = 50;
+                frequencySlider.value = 1;
+                amplitudeValue.textContent = '50';
+                frequencyValue.textContent = '1.0';
+                selectedWaveInfo.textContent = 'Select a wave to adjust';
+                selectedWaveInfo.style.color = '#666';
+            }
+        }
+        
+        // Slider event handlers
+        amplitudeSlider.addEventListener('input', (e) => {
+            if (selectedWave) {
+                selectedWave.amplitude = parseInt(e.target.value);
+                amplitudeValue.textContent = selectedWave.amplitude;
+                update();
             }
         });
         
-        canvas.addEventListener('mouseup', () => {
-            isDragging = false;
-            selectedWave = null;
-            canvas.style.cursor = 'crosshair';
+        frequencySlider.addEventListener('input', (e) => {
+            if (selectedWave) {
+                selectedWave.frequency = parseFloat(e.target.value);
+                frequencyValue.textContent = selectedWave.frequency;
+                update();
+            }
         });
         
         // Function to draw a sine wave
-        function drawSineWave(amplitude, frequency, color, opacity = 1.0, lineWidth = 2) {
+        function drawSineWave(amplitude, frequency, color, opacity = 1.0, lineWidth = 2, lineDash = []) {
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.globalAlpha = opacity;
             ctx.lineWidth = lineWidth;
+            ctx.setLineDash(lineDash);
             
             const centerY = canvas.height / 2;
             
@@ -269,6 +299,7 @@
             
             ctx.stroke();
             ctx.globalAlpha = 1.0;
+            ctx.setLineDash([]); // Reset line dash
         }
         
         // Function to update all waves
@@ -290,7 +321,8 @@
                 const isSelected = selectedWave && selectedWave.id === wave.id;
                 const opacity = isSelected ? 1.0 : 0.6;
                 const lineWidth = isSelected ? 3 : 2;
-                drawSineWave(wave.amplitude, wave.frequency, wave.color, opacity, lineWidth);
+                const lineDash = [5, 3]; // Make individual waves dotted
+                drawSineWave(wave.amplitude, wave.frequency, wave.color, opacity, lineWidth, lineDash);
             });
             
             // Draw the sum of all waves
