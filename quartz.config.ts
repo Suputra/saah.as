@@ -8,7 +8,7 @@ import * as Plugin from "./quartz/plugins"
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "Saahas' Thoughts",
+    pageTitle: "The Mechanical Garden",
     pageTitleSuffix: "",
     enableSPA: false,
     enablePopovers: true,
@@ -32,8 +32,8 @@ const config: QuartzConfig = {
           light: "#fefcf8",
           lightgray: "#f3ede0",
           gray: "#b8d0d0",
-          darkgray: "#5e8787",
-          dark: "#1f3e3e",
+          darkgray: "#2a2a2a",
+          dark: "#2a2a2a",
           secondary: "#5cb3e6",
           tertiary: "#6de0d9",
           highlight: "rgba(144, 213, 207, 0.2)",
