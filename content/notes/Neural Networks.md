@@ -20,14 +20,30 @@ In this Paper, I aim to investigate the essentials of Neural Networks, and how a
 
 To begin, let us understand where the idea of an Artificial Neural Network originates from. As the name alludes to, it relates to the Natural Neural Networks that are present in organisms, which people have been interested in for as long as they realized that they have had brains. The brain itself is very complex, being comprised of several areas dedicated to different functions. Its fundamental building block is the Neuron – a cell that takes inputs of electrical charge from its dendrites (which can number in the tens of thousands), to return a single output from its axon, which either fires, or does not fire. As opposed to traditional computing methods, which tend to be only slightly multi threaded and fast, neural networks tend to be more dependent on parallel processing and slower individual processes (Coolen, 2003). Furthermore, as opposed to traditional algorithms, Neural Networks have a degree of "training" in which the program is optimized for its specific function, as has been alluded to before (Coolen, 2003).
 
-_Figure 1: Source derived from an article on the fundamentals of the math behind neural networks (Coolen, 2003)_
+
+| **Conventional Computers**    | **Biological Neural Networks**  |
+| ----------------------------- | ------------------------------- |
+| **Processors**                | **Neurons**                     |
+| *operation speed* ~ 10⁸ Hz    | *operation speed* ~ 10² Hz      |
+| *signal/noise* ~ ∞            | *signal/noise* ~ 1              |
+| *signal velocity* ~ 10⁸ m/sec | *signal velocity* ~ 1 m/sec     |
+| *connections* ~ 10            | *connections* ~ 10⁴             |
+|                               |                                 |
+| Sequential operation          | Parallel operation              |
+| Program & data                | Connections, neuron thresholds  |
+| External programming          | Self-programming & adaptation   |
+|                               |                                 |
+| Hardware failure: fatal       | Robust against hardware failure |
+| No unforeseen data            | Messy, unforeseen data          |
+
+_Table 1: Source derived from an article on the fundamentals of the math behind neural networks (Coolen, 2003)_
 
 ## Structure and Building Blocks of the Neural Network
 
 To continue, this idea of a Network of cells can be simplified into a computation method. Essentially, a neuron could be represented by a function taking in a certain number of variables, and transforming its given data to a single output variable. Putting a large number of these Neurons together results in a Neural Network, which consists of an input layer (which consists of the data put into the network), a certain number of hidden layers (the layers that do the "processing"), and an output layer (which is what outputs the network's result) (McDonald, 2017). In essence, a neural network is just a network of functions feeding into each other to result in an output. A diagram is shown below:
 
 An important question to be asking while examining this is why this structure results in the input it does. Why would a grouping of functions be able to figure out the character that is written by my messy handwriting? Well, while a traditional algorithm would solve a problem step by step, with the instructions that it is given, similar to a single function, Neural Networks consist of several of these functions (or what will be called nodes, neurons, or vertices), which essentially allows the problem to be reduced into different parts and chunked together. Each layer examines a specific part of the problem, and each neuron examines a specific part of its layer's problem. However, this is just speculation, as it can be notoriously difficult to find out why a network does one thing as opposed to something else. This will be explored further when the training of networks is examined.
-
+![[Screenshot 2025-06-02 at 11.50.36 PM.png]]
 _Figure 2: Source derived from an article about the basic layout of a Neural Network (Khademi, 2016)_
 
 ### The layout of a single neuron, and the equation of a Neuron
@@ -39,7 +55,7 @@ The input layer can be represented by the vector $\vec{x}$, while the weights of
 $$\vec{x} \cdot \vec{w} + b = v$$
 
 In this way, stronger connections with a neuron represent higher weights for it, and a greater contribution to its input (McDonald, 2017). Bias relates to essentially increasing or decreasing the input value for a neuron by adding a number to to the dot product of the weight and value vectors (McDonald, 2017).
-
+![[Screenshot 2025-06-02 at 11.50.56 PM.png]]
 _Figure 3: Source derived from an article on the basic structure of a Neuron (Ying, 2014)_
 
 ### Transforming the output of a neuron with the Heaviside Step and Sigmoid functions
@@ -51,7 +67,7 @@ The Heaviside Step function is defined by the following piece wise function:
 $$f(v) = \begin{cases} 1, & v > 0 \ 0, & v < 0 \end{cases}$$
 
 Another possible function for $f(v)$ is the Sigmoid function, a continuous function that ranges from 0 to one. This is obviously only possible for artificial neural networks that are not only limited to 2 values. This would allow artificial neural networks to carry much more information per neuron as compared to a natural one. This function is graphed on the following page:
-
+![[Screenshot 2025-06-02 at 11.51.37 PM.png]]
 _Figure 4: Graphed using Desmos.com graphing tool_
 
 The Sigmoid curve is defined by the function:
@@ -59,7 +75,7 @@ The Sigmoid curve is defined by the function:
 $$f(v) = \frac{1}{1 + e^{-v}}$$
 
 Essentially, these functions represent the neuron itself, and the transformation it does to result in its transformed output. To keep all the numbers within the Network on the same degree of magnitude, the Sigmoid function is used, as it continuously maps its domain, ${v | v \in \mathbb{R}}$ to its range, ${f(v) | f(v) \in [0,1]}$. One important thing to note in detailing the Sigmoid function, and the reason why it is most commonly used as the transformation function for every Neuron, is its continuous and differentiable nature. This is important to the gradient descent step in finding the minima of the Cost Function, which will be examined soon. This concludes the basic layout of the Neural Network, how data is fed into it, and the basic structure of the nodes themselves. However, one large question remains- how do we find values for the weights and biases of each Neuron?
-
+![[Screenshot 2025-06-02 at 11.51.55 PM.png]]
 _Figure 5: Graphed using Desmos.com graphing tool_
 
 ## Training of Neural Networks with forward and back propagation and gradient descent
@@ -88,7 +104,7 @@ Visuals can be crucial to have a better intuitive understanding of how back prop
 
 As can be seen, the function itself is continuous and differentiable, as it is composed of repeated linear combinations of the Sigmoid function, which itself is continuous and differentiable, the connection weights and the neuron biases In the end, the function itself is continuous and differentiable for all inputs $x, y \in \mathbb{R}^2$. Considering that any possible combination of weights and biases exist on the input plane of this graph, I know that the initial random values chosen for the weights and biases are somewhere on this input plane, and it is also likely that they have a high cost. The problem of training this network then reduces to finding a way to reduce this cost to as much as possible – which can be done by finding a relative minimum of the Cost Function. As can be seen in the graph above, even though a relatively simple Cost Function in 3 Dimensions can have many relative minima, it would be difficult to find an absolute minimum. This reduces the task of training the neural network to finding a relative minimum of the cost function, which is considered "good enough" by most (this will be further explored in the training data section). This will be accomplished through gradient descent. As I continue, I will augment this problem back to an arbitrary number of input dimensions for more applicable equations without loss of generality.
 
-_Figure 6: Graphed using the Geogebra.org 3D graphing tool_
+![[Screenshot 2025-06-02 at 11.52.16 PM.png]]_Figure 6: Graphed using the Geogebra.org 3D graphing tool_
 
 Furthermore, to make the notation more simple in the following sections more simple, I will also introduce a vector form of the Cost Function that will be significantly less verbose. This function is shown below:
 
@@ -123,13 +139,13 @@ Even with a Neural Network that has been trained with thousands of pieces of sam
 In my initial understanding of testing data, I did not understand the point of it, but I soon realized that the necessary of testing data all comes back to the idea of finding a minimum of the Cost Function with Gradient Descent. To better examine this, I will go down to a sample Cost Function with a one variable input and output, shown below:
 
 In this figure, it can be seen that there exist several relative minimums to the cost function, and with the way that Gradient Descent works, slowing down when any relative minimum is reached, the back propagation algorithm could end when the first relative minimum, which still has a high cost, is reached. So even if the back propagation completes with a certain data sample, it is still not certain whether the network was effectively able to "learn" from this sample by changing its weights and biases in the most efficient way.
-
+![[Screenshot 2025-06-02 at 11.52.30 PM.png]]
 _Figure 7: Graphed using Desmos.com graphing tool_
 
 There is also the problem of over fitting or under fitting the data, in which a network either over fits or under fits its training data, resulting in it not being a good model to test data from the real world. This can be shown in the figure below:
 
 If a network is trained to be overly reliant on its training data, then it will not function well with real world data, with a lot of introduced noise, but if it under fitted, the network will not be able to make good conclusions from the data it gets because it never "learned" anything. To ensure this, the sample data set must be an appropriate size and diversity for the training of the network.
-
+![[Screenshot 2025-06-02 at 11.52.43 PM.png]]
 _Figure 8: Source derived from a paper on over/underfitting in machine learning (Bhande, 2018)_
 
 This is why testing a neural network is important, but the process itself is a fairly short checking step. Test data is fed into the network, and the number of correct samples over the total samples results in the accuracy. If a neural network is accurate, then it can go on into real world use, but if it is not, there are a variety of other steps that can be taken – go back and retrain the network with new training data, change the layout of the network, or several other possible options.
