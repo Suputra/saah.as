@@ -82,7 +82,7 @@ The J. Craig Venter Institute created JCVI-syn3.0, the world's smallest living c
 The alternative approach: build a cell from non-living components. This requires integrating:
 
 ```mermaid
-graph TD
+graph BT
 	A[Membrane<br/>Compartmentalization] --> E[Functional Cell]
 	B[Genome<br/>Information Storage] --> E
 	C[Ribosomes<br/>Protein Synthesis] --> E
