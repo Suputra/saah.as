@@ -14,7 +14,7 @@ We want to be able to take advantage of proteins' existing machinery to create m
 
 As you can see, we've found some remarkable proteins that have been "designed" purely through evolution and natural selection. One can imagine the possibilities if we try to bring in targeted design and optimization to this.
 
-For context on the scale here: there are 20^200 possible sequences for just a 200 amino acid protein - more than the number of atoms in the universe. Evolution has explored only a tiny fraction of this space, and only for solving biological problems, not human-engineered ones.
+For context on the scale here: there are 20^200 possible sequences for just a 200 amino acid protein - more than the number of atoms in the universe. Evolution has explored only a tiny fraction of this space, and only for solving biological problems, not human-engineered ones. Kinesin has 340 amino acids
 
 ## How do we break the dogma?
 The main problem here is the core problem of protein engineering: given a sequence of polypeptides, how do we predict the 3d structure it will fold up into?
@@ -70,7 +70,7 @@ graph LR
 ### The Reality Gap
 Many proteins that appear optimal computationally fail experimentally. They may be toxic to host cells, form aggregates, or simply not function as intended. This experimental filter highlights the complexity our models still miss - the cell is a noisy, crowded environment with quality control systems and off-target interactions.
 
-Cost per design cycle: ~$3,000-6,000 at universities, up to $10,000+ commercially.
+Cost per design cycle: $3,000-6,000 at universities, up to $10,000+ commercially.
 
 ## Building Life from Scratch
 Individual protein design enables a bigger question: can we build entire cells?
@@ -80,20 +80,21 @@ The J. Craig Venter Institute created JCVI-syn3.0, the world's smallest living c
 
 ### Bottom-Up Synthetic Biology
 The alternative approach: build a cell from non-living components. This requires integrating:
-- Membrane compartmentalization
-- Genetic information storage
-- Protein synthesis machinery
-- Metabolic pathways
-- Coordinated regulation
 
 ```mermaid
-graph BT
+graph TD
 	A[Membrane<br/>Compartmentalization] --> E[Functional Cell]
 	B[Genome<br/>Information Storage] --> E
 	C[Ribosomes<br/>Protein Synthesis] --> E
 	D[Metabolism<br/>Energy & Building Blocks] --> E
 	F[Regulation<br/>Coordination] --> E
 ```
+
+- Membrane compartmentalization
+- Genetic information storage
+- Protein synthesis machinery
+- Metabolic pathways
+- Coordinated regulation
 
 The integration bottleneck is severe - chemical conditions optimal for one subsystem often inhibit others. This remains largely in the research phase.
 
@@ -114,7 +115,3 @@ The potential applications are significant:
 - Environmental remediation (plastic-degrading enzymes)
 - Novel materials
 - Artificial biological systems
-
-But the technology raises important questions about biosecurity, environmental impact, and the ethics of creating life.
-
-We're moving from reading biology to writing it. The engineering challenges are substantial, but the fundamental capability is now established.
