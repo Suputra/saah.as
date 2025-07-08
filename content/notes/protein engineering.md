@@ -14,7 +14,7 @@ We want to be able to take advantage of proteins' existing machinery to create m
 
 As you can see, we've found some remarkable proteins that have been "designed" purely through evolution and natural selection. One can imagine the possibilities if we try to bring in targeted design and optimization to this.
 
-For context on the scale here: there are 20^200 possible sequences for just a 200 amino acid protein - more than the number of atoms in the universe. Evolution has explored only a tiny fraction of this space, and only for solving biological problems, not human-engineered ones. Kinesin has 340 amino acids
+For context on the scale here: there are 20^200 possible sequences for just a 200 amino acid protein - more than the number of atoms in the universe. Evolution has explored only a tiny fraction of this space, and only for solving biological problems, not human-engineered ones. Kinesin has 340 amino acids.
 
 ## How do we break the dogma?
 The main problem here is the core problem of protein engineering: given a sequence of polypeptides, how do we predict the 3d structure it will fold up into?
