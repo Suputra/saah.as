@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Timeline</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕐</text></svg>">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/force-graph"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    const TIMELINE_DATA = {
+        nodes: [
+            { id: "birth", name: "Birth", date: "2001-12-01", type: "life", description: "Born in the Dallas area" },
+            { id: "high_school", name: "High School", date: "2019-05-04", type: "education", description: "Attended the STEM Academy in the Philadelphia suburbs" },
+            { id: "high_school_graduation", name: "High School Graduation", date: "2019-05-04", type: "education", description: "Graduated High School" },
+            { id: "rit", name: "RIT", date: "2019-08-01", type: "education", description: "Attended RIT for one semester" },
+            { id: "community_college", name: "Community College", date: "2020-01-01", type: "education", description: "Attended Community College for one semester" },
+            { id: "georgia_tech", name: "Georgia Tech", date: "2020-08-01", type: "education", description: "Started at Georgia Tech" },
+            { id: "hs_work", name: "Electronics Prototyping", date: "2018-01-01", type: "work", description: "Worked at a local electronics prototyping company" },
+            { id: "gtri", name: "Georgia Tech Research Institute", date: "2021-01-01", type: "work", description: "Worked at Georgia Tech's Research Institute" },
+            { id: "zoox_internship", name: "Zoox Internship", date: "2022-01-01", type: "work", description: "Interned at Zoox" },
+            { id: "georgia_tech_graduation", name: "Georgia Tech Graduation", date: "2023-06-01", type: "education", description: "Graduated from Georgia Tech with a degree in Mechanical Engineering" },
+            { id: "ueda_lab", name: "Biorobotics Research", date: "2022-01-01", type: "research", description: "Research in GT's Biorobotics and Human Modelling Lab under Dr. Jun Ueda" },
+            { id: "zoox", name: "Zoox", date: "2022-01-01", type: "work", description: "Worked at Zoox since 2022" },
+        ],
+        links: [
+            { source: "birth", target: "hs_work" },
+            { source: "hs_work", target: "high_school" },
+            { source: "high_school", target: "high_school_graduation" },
+            { source: "high_school_graduation", target: "rit" },
+            { source: "rit", target: "community_college" },
+            { source: "community_college", target: "georgia_tech" },
+            { source: "georgia_tech", target: "gtri" },
+            { source: "gtri", target: "zoox_internship" },
+            { source: "zoox_internship", target: "ueda_lab" },
+            { source: "ueda_lab", target: "georgia_tech_graduation" },
+            { source: "zoox_internship", target: "zoox" },
+
+        ]
+    };
+    </script>
+    <style>
+    :root {
+        --bg-color: #fdf6e3;
+        --bg-secondary: #eee8d5;
+        --border-color: #e6ddc5;
+        --text-color: #657b83;
+        --text-secondary: #586e75;
+        --text-light: #93a1a1;
+        --accent-color: #268bd2;
+        --accent-hover: rgba(38, 139, 210, 0.1);
+        --accent-dark: #2078b4;
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-circle: 50%;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --transition: all 0.2s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Nunito', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow: hidden;
+        line-height: 1.5;
+    }
+
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-end { justify-content: flex-end; }
+    .gap-sm { gap: 0.5rem; }
+    .gap-md { gap: 1rem; }
+    .gap-lg { gap: 1.5rem; }
+    .hidden { display: none; }
+    .block { display: block; }
+
+    header {
+        background-color: var(--bg-secondary);
+        padding: 0 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        height: 60px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-logo { margin-right: 2rem; }
+
+    .back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--text-color);
+        margin-right: 0.7rem;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-circle);
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .back-btn i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1rem;
+    }
+
+    .back-btn:hover {
+        background-color: var(--accent-hover);
+        color: var(--accent-color);
+    }
+
+    h3 {
+        color: var(--text-secondary);
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+
+    .btn {
+        background: none;
+        border: none;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        transition: var(--transition);
+        text-decoration: none;
+    }
+
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn:hover:not(.primary) {
+        background-color: var(--accent-hover);
+        color: var(--accent-color);
+    }
+
+    .primary {
+        background-color: var(--accent-color);
+        color: white;
+    }
+
+    .primary:hover {
+        background-color: var(--accent-dark);
+    }
+
+    .btn i { font-size: 0.9rem; }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: var(--transition);
+        border-radius: var(--radius-circle);
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .close-btn:hover {
+        color: var(--text-color);
+        background-color: var(--bg-secondary);
+    }
+
+    main {
+        display: flex;
+        height: calc(100vh - 60px);
+        overflow: hidden;
+    }
+
+    #timeline-container {
+        flex: 1;
+        height: 100%;
+        padding: 10px;
+    }
+
+    #graph {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--radius-sm);
+        background-color: var(--bg-color);
+    }
+
+    .panel {
+        background-color: #fcf9f0;
+        padding: 1.8rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--bg-secondary);
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+        border-bottom: 1px solid var(--bg-secondary);
+        padding-bottom: 0.8rem;
+    }
+
+    #event-details {
+        width: 90%;
+        max-width: 500px;
+        box-shadow: var(--shadow);
+        overflow-y: auto;
+        transition: var(--transition);
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+        height: auto;
+        max-height: 80vh;
+        z-index: 10;
+    }
+
+    #event-details.hidden {
+        transform: translateX(-50%) translateY(150%);
+        box-shadow: none;
+    }
+
+    #event-title {
+        font-size: 1.3rem;
+        margin-right: 1rem;
+        flex: 1;
+        color: var(--accent-color);
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+
+    #event-description {
+        margin-bottom: 1.2rem;
+        line-height: 1.6;
+    }
+
+    #event-date {
+        margin-bottom: 0.8rem;
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+
+    #event-type {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background-color: var(--bg-secondary);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 20;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    .modal.visible { display: block; }
+
+    .modal-content {
+        margin: 10% auto;
+        width: 90%;
+        max-width: 500px;
+    }
+
+    .modal-body { margin-bottom: 20px; }
+
+    .modal-body p {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .refresh-tip {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        transform: none;
+        background-color: var(--bg-secondary);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        box-shadow: var(--shadow);
+        z-index: 15;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        opacity: 0.95;
+    }
+
+    .refresh-tip i {
+        margin-right: 6px;
+    }
+
+    .filter-options {
+        margin-bottom: 1.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .filter-options label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+        background-color: var(--bg-secondary);
+        border-radius: 20px;
+        transition: var(--transition);
+    }
+
+    .filter-options label:hover {
+        background-color: var(--accent-hover);
+    }
+
+    .filter-options input[type="checkbox"] {
+        margin-right: 0.5rem;
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <header class="flex items-center justify-between">
+        <div class="flex items-center">
+            <div class="header-logo flex items-center">
+                <a href="https://saah.as" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h3>Life Timeline</h3>
+            </div>
+        </div>
+        <div class="flex items-center gap-lg">
+            <button class="btn btn-icon" id="reset-btn">
+                <i class="fas fa-redo-alt"></i>
+                Reset Graph
+            </button>
+            <button class="btn btn-icon" id="filter-btn">
+                <i class="fas fa-filter"></i>
+                Filter
+            </button>
+            <a href="https://github.com/Suputra/life-timeline" class="btn btn-icon" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i>
+                GitHub
+            </a>
+        </div>
+    </header>
+    
+    <div id="filter-modal" class="modal">
+        <div class="modal-content panel">
+            <div class="panel-header">
+                <h3>Filter Events</h3>
+                <button id="close-filter" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Select event types to display:</p>
+                <div id="filter-options" class="filter-options"></div>
+            </div>
+            <div class="flex justify-end gap-md">
+                <button id="apply-filter" class="btn primary">Apply</button>
+                <button id="reset-filter" class="btn">Reset</button>
+            </div>
+        </div>
+    </div>
+    
+    <main>
+        <div id="timeline-container">
+            <div id="graph"></div>
+        </div>
+        
+        <div id="event-details" class="panel hidden">
+            <div class="panel-header">
+                <h2 id="event-title">Event Title</h2>
+                <button id="close-details" class="close-btn">×</button>
+            </div>
+            <div id="event-description">Event description will appear here.</div>
+            <div id="event-date"></div>
+            <div id="event-type">Event Type</div>
+        </div>
+        
+        <div class="refresh-tip">
+            <i class="fas fa-sync-alt"></i>
+            If you don't see a graph, please refresh the page
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cache DOM elements
+        const $ = id => document.getElementById(id);
+        const graph = $('graph');
+        const details = $('event-details');
+        const modal = $('filter-modal');
+        
+        // Set up state
+        let selectedNode = null;
+        let data = TIMELINE_DATA;
+        let filteredData = {...data};
+        let activeFilters = new Set();
+        
+        // Update today's date
+        const todayNode = data.nodes.find(n => n.id === 'today');
+        if (todayNode) todayNode.date = new Date().toISOString().split('T')[0];
+        
+        // Calculate timeline positions
+        const sortedNodes = [...data.nodes].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const earliestDate = new Date(sortedNodes[0].date).getTime();
+        const latestDate = new Date(sortedNodes[sortedNodes.length - 1].date).getTime();
+        const timeRange = latestDate - earliestDate;
+        
+        // Initialize graph
+        window.Graph = ForceGraph()(graph)
+            .graphData(filteredData)
+            .nodeId('id')
+            .nodeVal(5)
+            .nodeLabel('name')
+            .nodeColor('#657b83')
+            .linkColor('#93a1a1')
+            .onNodeClick(node => {
+                selectedNode = node;
+                highlightNodes(node.id);
+                showDetails(node);
+                Graph.centerAt(node.x, node.y, 800).zoom(1.2, 800);
+            })
+            .onBackgroundClick(() => {
+                selectedNode = null;
+                resetHighlighting();
+                hideDetails();
+            })
+            .onNodeHover(node => {
+                if (selectedNode) return;
+                node ? highlightNodes(node.id) : resetHighlighting();
+            })
+            .d3Force('charge', d3.forceManyBody().strength(-100))
+            .d3Force('link', d3.forceLink().id(d => d.id).distance(50))
+            .d3Force('x', d3.forceX(node => getTimelineX(node.date)).strength(0.3))
+            .d3Force('y', d3.forceY(graph.clientHeight / 2).strength(0.1));
+        
+        // Helper functions
+        function getTimelineX(date) {
+            const time = new Date(date).getTime();
+            const availableWidth = graph.clientWidth - 200;
+            return 100 + ((time - earliestDate) / timeRange * availableWidth);
+        }
+        
+        function getUniqueTypes() {
+            const types = new Set();
+            data.nodes.forEach(node => {
+                if (node.type) types.add(node.type);
+            });
+            return Array.from(types);
+        }
+        
+        function populateFilterOptions() {
+            const container = $('filter-options');
+            container.innerHTML = '';
+            
+            getUniqueTypes().forEach(type => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = type;
+                checkbox.checked = !activeFilters.size || activeFilters.has(type);
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${type.charAt(0).toUpperCase() + type.slice(1)}`));
+                container.appendChild(label);
+            });
+        }
+        
+        function filterData() {
+            if (!activeFilters.size) {
+                filteredData = {...data};
+                return;
+            }
+            
+            const nodes = data.nodes.filter(node => activeFilters.has(node.type));
+            const nodeIds = new Set(nodes.map(node => node.id));
+            
+            const links = data.links.filter(link => {
+                const sourceId = link.source.id || link.source;
+                const targetId = link.target.id || link.target;
+                return nodeIds.has(sourceId) && nodeIds.has(targetId);
+            });
+            
+            filteredData = { nodes, links };
+        }
+        
+        function updateGraph() {
+            filterData();
+            Graph.graphData(filteredData);
+            
+            if (selectedNode) {
+                const nodeExists = filteredData.nodes.some(n => n.id === selectedNode.id);
+                if (!nodeExists) {
+                    selectedNode = null;
+                    hideDetails();
+                } else {
+                    highlightNodes(selectedNode.id);
+                }
+            }
+            
+            Graph.zoomToFit(800, 40);
+        }
+        
+        function highlightNodes(nodeId) {
+            if (!nodeId || !filteredData) {
+                if (!selectedNode) {
+                    resetHighlighting();
+                    return;
+                }
+                
+                nodeId = selectedNode.id;
+            }
+            
+            const neighbors = new Set();
+            filteredData.links.forEach(link => {
+                const sourceId = link.source.id || link.source;
+                const targetId = link.target.id || link.target;
+                
+                if (sourceId === nodeId) neighbors.add(targetId);
+                if (targetId === nodeId) neighbors.add(sourceId);
+            });
+            neighbors.add(nodeId);
+            
+            Graph.nodeColor(n => neighbors.has(n.id) ? '#268bd2' : '#eee8d5')
+                 .linkColor(l => {
+                     const sourceId = l.source.id || l.source;
+                     const targetId = l.target.id || l.target;
+                     return (sourceId === nodeId || targetId === nodeId) ? '#268bd2' : '#d8d4c5'
+                 });
+        }
+        
+        function resetHighlighting() {
+            Graph.nodeColor('#657b83').linkColor('#93a1a1');
+        }
+        
+        function showDetails(node) {
+            $('event-title').textContent = node.name;
+            $('event-date').textContent = new Date(node.date).toLocaleDateString();
+            $('event-description').textContent = node.description;
+            $('event-type').textContent = node.type.charAt(0).toUpperCase() + node.type.slice(1);
+            
+            details.classList.remove('hidden');
+        }
+        
+        function hideDetails() {
+            details.classList.add('hidden');
+        }
+        
+        function showModal() {
+            populateFilterOptions();
+            modal.classList.add('visible');
+        }
+        
+        function hideModal() {
+            modal.classList.remove('visible');
+        }
+        
+        function resetGraph() {
+            selectedNode = null;
+            resetHighlighting();
+            hideDetails();
+            
+            activeFilters.clear();
+            filteredData = {...data};
+            Graph.graphData(filteredData);
+            
+            Graph.zoomToFit(800, 40);
+        }
+        
+        // Event listeners
+        $('filter-btn').addEventListener('click', showModal);
+        $('close-filter').addEventListener('click', hideModal);
+        $('close-details').addEventListener('click', () => {
+            hideDetails();
+            selectedNode = null;
+            resetHighlighting();
+        });
+        $('reset-btn').addEventListener('click', resetGraph);
+        
+        $('apply-filter').addEventListener('click', () => {
+            activeFilters.clear();
+            const checked = $('filter-options').querySelectorAll('input:checked');
+            checked.forEach(option => activeFilters.add(option.value));
+            
+            updateGraph();
+            hideModal();
+        });
+        
+        $('reset-filter').addEventListener('click', () => {
+            const options = $('filter-options').querySelectorAll('input');
+            options.forEach(option => option.checked = true);
+            
+            activeFilters.clear();
+            updateGraph();
+            hideModal();
+        });
+        
+        window.addEventListener('resize', () => {
+            Graph.width(graph.clientWidth).height(graph.clientHeight);
+            Graph.d3Force('x').x(node => getTimelineX(node.date));
+        });
+    });
+    </script>
+</body>
+</html> 

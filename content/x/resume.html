@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Saahas Yechuri - Terminal Resume</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+            @page {
+                size: 13.5in 47.5in;
+                margin: 0;
+            }
+
+            :root {
+                --bg: #1a1b26;
+                --bg-lighter: #24283b;
+                --text: #c0caf5;
+                --pink: #f7768e;
+                --purple: #bb9af7;
+                --cyan: #7dcfff;
+                --green: #9ece6a;
+                --yellow: #e0af68;
+                --border: #414868;
+                font-size: 75%; /* Reduce base font size */
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "JetBrains Mono", monospace;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                padding: 2rem;
+                line-height: 1.6;
+                min-height: 100vh;
+            }
+
+            .terminal {
+                max-width: 1200px;
+                margin: 0 auto;
+                background: var(--bg-lighter);
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid var(--border);
+            }
+
+            .titlebar {
+                display: flex;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: var(--bg-lighter);
+                z-index: 100;
+                justify-content: space-between;
+            }
+
+            .titlebar-left {
+                display: flex;
+                align-items: center;
+            }
+
+            .titlebar-right {
+                display: flex;
+                align-items: center;
+            }
+
+            .circle {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 8px;
+                transition: opacity 0.2s;
+            }
+
+            .circle:hover {
+                opacity: 0.8;
+            }
+
+            .circle:nth-child(1) {
+                background: var(--pink);
+            }
+            .circle:nth-child(2) {
+                background: var(--yellow);
+            }
+            .circle:nth-child(3) {
+                background: var(--green);
+            }
+
+            .back-button {
+                margin-left: 20px;
+                color: var(--text);
+                text-decoration: none;
+                border: 1px solid var(--border);
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+            }
+
+            .back-button:hover {
+                background: rgba(0, 0, 0, 0.2);
+                transform: translateY(-1px);
+            }
+
+            .back-button::before {
+                content: "←";
+                margin-right: 5px;
+            }
+
+            .github-button {
+                color: var(--text);
+                text-decoration: none;
+                font-size: 1.3rem;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                padding: 4px;
+            }
+
+            .github-button:hover {
+                color: var(--cyan);
+                transform: translateY(-1px);
+            }
+
+            .github-icon {
+                width: 24px;
+                height: 24px;
+                fill: currentColor;
+            }
+
+            .prompt {
+                color: var(--purple);
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .prompt span {
+                color: var(--text);
+            }
+
+            .content {
+                display: grid;
+                grid-template-columns: minmax(300px, 1fr) minmax(400px, 2fr);
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .ascii-art {
+                /* font-family: "Courier New", monospace; */
+                font-size: 4.5px;
+                line-height: 0.8;
+                letter-spacing: 0;
+                white-space: pre;
+                color: var(--text);
+                opacity: 0.7;
+                transition: opacity 0.2s;
+                padding: 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: auto;
+                background: rgba(0,0,0,0.1);
+                text-align: center;
+            }
+
+            .ascii-art:hover {
+                opacity: 1;
+            }
+
+            .info {
+                padding-left: 0;
+                max-width: 800px;
+                display: grid;
+                gap: 1rem;
+            }
+
+            .info-line {
+                display: grid;
+                grid-template-columns: 140px 1fr;
+                gap: 1rem;
+                align-items: baseline;
+            }
+
+            .info-label {
+                color: var(--pink);
+                font-weight: 500;
+                font-size: 1.1em;
+            }
+
+            .info-value {
+                color: var(--text);
+                line-height: 1.6;
+                font-size: 1.1em;
+            }
+
+            .command-block {
+                margin-top: 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.5rem;
+                background: rgba(0, 0, 0, 0.2);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .command-block:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .command {
+                color: var(--green);
+                margin-bottom: 1rem;
+                font-weight: 600;
+            }
+
+            .command::before {
+                content: "$ ";
+                color: var(--purple);
+            }
+
+            .output {
+                color: var(--text);
+                padding-left: 1rem;
+            }
+
+            .output p {
+                margin-bottom: 1rem;
+            }
+
+            .output ul {
+                list-style: none;
+                margin-left: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .output li {
+                margin-bottom: 0.8rem;
+                position: relative;
+                padding-left: 1.2rem;
+                line-height: 1.6;
+            }
+
+            .output li::before {
+                content: ">";
+                position: absolute;
+                left: 0;
+                color: var(--purple);
+            }
+
+            .tag-section {
+                margin-bottom: 2rem;
+            }
+
+            .tag-title {
+                color: var(--yellow);
+                margin-bottom: 1rem;
+                font-weight: 600;
+            }
+
+            .tag {
+                background: rgba(0, 0, 0, 0.3);
+                color: var(--cyan);
+                padding: 0.3rem 0.8rem;
+                border-radius: 4px;
+                display: inline-block;
+                margin: 0.3rem;
+                font-size: 0.9rem;
+                border: 1px solid var(--border);
+                transition: all 0.2s;
+            }
+
+            .tag:hover {
+                background: var(--bg);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .link {
+                color: var(--cyan);
+                text-decoration: none;
+                border-bottom: 1px solid transparent;
+                transition: all 0.2s;
+            }
+
+            .link:hover {
+                border-bottom-color: var(--cyan);
+            }
+
+            .section-heading {
+                color: var(--yellow);
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .section-heading::before {
+                content: "#";
+                color: var(--purple);
+                opacity: 0.7;
+            }
+
+            .company {
+                color: var(--pink);
+                font-weight: 600;
+            }
+
+            .period {
+                color: var(--cyan);
+                margin-bottom: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .highlight {
+                color: var(--pink);
+                font-weight: 500;
+            }
+
+            .keyword {
+                color: var(--cyan);
+                font-weight: 500;
+            }
+
+            .title {
+                color: var(--pink);
+                font-weight: 1000;
+                font-weight: bold;
+                display: inline;
+            }
+
+            .subtitle {
+                color: var(--yellow);
+                font-weight: 600;
+            }
+
+            .output li {
+                margin-bottom: 0.75rem;
+            }
+
+            .command-block {
+                margin-top: 1.5rem;
+            }
+
+            .section-heading {
+                margin-top: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .cursor {
+                display: inline-block;
+                width: 8px;
+                height: 16px;
+                background: var(--text);
+                animation: blink 1s infinite;
+                vertical-align: middle;
+            }
+
+            @keyframes blink {
+                0%, 100% { opacity: 0; }
+                50% { opacity: 1; }
+            }
+
+            @media (max-width: 768px) {
+                .content {
+                    grid-template-columns: 1fr;
+                }
+
+                .ascii-art {
+                    display: none;
+                }
+
+                .info-line {
+                    grid-template-columns: 1fr;
+                    gap: 0.5rem;
+                }
+
+                body {
+                    padding: 1rem;
+                    font-size: 0.9rem;
+                }
+
+                .terminal {
+                    padding: 1rem;
+                }
+
+                /* Prevent wrapping and enable horizontal scroll for preformatted content */
+                .tree-output {    /* Now applies to skills, projects, awards, patents, education */
+                    white-space: pre;    /* Prevent internal line wrapping */
+                    overflow-x: auto;    /* Allow horizontal scrolling for the block */
+                    font-size: 0.9em;    /* Adjust font size */
+                }
+            }
+
+            @media print {
+                body {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                    background-color: #1a1b26 !important;
+                }
+
+                .terminal {
+                    box-shadow: none;
+                    /* border: 1px solid #ddd; */
+                }
+
+                :root {
+                    --bg: #1a1b26;
+                    --bg-lighter: #24283b;
+                    --text: #c0caf5;
+                    --pink: #f7768e;
+                    --purple: #bb9af7;
+                    --cyan: #7dcfff;
+                    --green: #9ece6a;
+                    --yellow: #e0af68;
+                    --border: #414868;
+                }
+            }
+
+            /* Styles for .tree-output, now used for all command block outputs */
+            .tree-output {
+                font-family: "JetBrains Mono", monospace;
+                white-space: pre;
+                line-height: 1.2;
+            }
+
+            .tree-output .tree-prefix {
+                color: var(--purple);
+            }
+
+            .tree-output .tree-name {
+                color: var(--cyan);
+            }
+
+            .tree-output .tree-description {
+                color: var(--text);
+                padding-left: 4ch;
+                display: block;
+                white-space: pre-wrap;
+                margin-bottom: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="terminal">
+            <div class="titlebar">
+                <div class="titlebar-left">
+                    <a href="https://saah.as" class="back-button">Back</a>
+                </div>
+                <div class="titlebar-right">
+                    <a href="https://github.com/Suputra/resume" class="github-button" title="View on GitHub">
+                        <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.236 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="prompt">user@saahas-pc<span>:~$</span> neofetch --ascii_colors 5 6 4</div>
+
+            <div class="content">
+                <div class="ascii-art">
+                    .                                                                                                       
+                    .ll,.                                                                                                   
+                     ,,'.                                                                                                   
+                                                                                                                            
+                         ..                                                                                                 
+                          ..            ...',;;;;,..                                                                        
+                           ..       ..',;:::;;:;;:,'.                                                                       
+                            ..   .',;:;;;;::;::::,'',.                                                                      
+                             .,''::;;;;;;;;;;:::,'',',',                                                                        
+                          .';;;,,',;;;;;::::::;,',,,,',,.                                                                   
+                        .,cc:;;,''';:::ccclc:;;,,'',,'',,.                                                                  
+                      .;cccccc:;;:ccllllolc::;;;;,'',''',,'..                                                               
+                    .;cc:cccllclllllllollc:::::;;;,'',',,,'''.                                                              
+                   ,lccclllllllllloooolc::::::::;;;,,,',,'.'''........                                                      
+                 .:lccllllllllllooodoooc:::::::::;;;;,,,'.''',;::;,,,,,'.                                                   
+                .locclllllooooodxxxddddoc:::::::::;;;;,'''',:::;,,''''''.                                                  
+                .dxllloodxkO000OOOOxddddol::::::::::;,,,'''cxkko;''',,''''.                                                 
+                 'x0OO00KXNWWWWX0OOOkddddol:::::::;;;;;:;,,lkkko,''',;,'''.                                                 
+                  ,ONNXXNWWWWWWWN0OOOkdoodol:::::::::;;;:,'cxk0x:'''''''',.                                                 
+                   .kNNXXNWWWWWWWN0OOOkdooddl::::c::::;;,,';dkOkc,,''','',.                                                 
+                    .dNNXXNWWWWWWWN0OOOkxoollccc:::::::;,,'.;lllc;',,,,,,.                                                  
+                     .lXNXXNWWNWWWWNKOkxdlclodolc:::::::;;,,'';:::;,,''..                                                   
+                     .,lKNXXNWWWNXK0kdlodxxxxxxolc::::::::;;'..'.....                                                       
+                    .lo,cxkxxkkxxdddxOO0KK0kxxxxolcc::::::,....'.                                                           
+                    .okclxkkkOO0KKXNNWNXOddxxxxxxdlcc:;;,'.',,'..         .. .....                                          
+                     :0xlxKWWNNXXNWWWWNx,,,,lxxxxxdoc;'..',,,,,....     ..        ..                                        
+                     .l0kod0XkccclONWWNx,::,lOxxxdl:,'';;:::;'......  .            ..    ..                                 
+                       ;xkdoxdccc,cXWNWXOddk0Odc;,',:clllcc;.. .......          ....'''',,''.                               
+                        .';,.:dxdd0WWWNX0Oxol:::clddxdool:'.....  ..... .....',,,,,,,,,;,''''.                              
+                               .cllllxkdoodxO000Okkkkxo:'........   .....''',,,,,,,,,;;,''''''.                             
+                                     .xXXKXNWWXXX0kdc,'....'......  . .......,,,,,,,:;''.....''..''...                      
+                                      .l0KKKXKOxo:'. .''''',;,'..............,,;;;;c;'.....'::,,,,,,,,.                     
+                                        .'''...     .::;;:c:;;,'...........';:::::c;'.....;ol,,,''''',,'.                   
+                                                  .cxxoc;:c:;::,.........';ccllc:c;'..',':kOl,,''','''',.                   
+                                                 ;xkddccc:cc:;;;,,,'..',;codddocc;''.';;,:ddc,,'',;,..'''.                  
+                                               .:kkxxx::c:lcccc:;,;::::lodddddll:,,'..''.,xOo;,,'','..','                   
+                                              .oOOkkkx:,llc:;:clooooooddddxxollc,,,,......o0x:,,,''''',,.                   
+                                             .d00OOOxOkdodddddoddddxkkkkkkkxocc;,,,,'......;:;,'',,,,,'.                    
+                                            .dkOK000OOOOOkkOkxxxkOO00KKK000dcc;,,,,,''........',,'''....                    
+                                       .;:;:xKKKK00000000000KKKXXXXNNXXKKK0occ;,,,,,,''...... .:l:;'''''.                   
+                                     .cxOOokKXNXKKKXXXXNNNNNXXKK00000OOOkO0x:::,,,,,,,'''......cOxoc,'''.                   
+                                     :kOXkdXXWWNNXXKK000000000000000KXKK0Okkl::;,,,,,,,','''''.,kOdl;'''.                   
+                                     o0ONxxXK0KKK000000KKXXXXNNNXXX0KXXKKOkOxc::;,,,,,,,,,''''''o0xo:,''.                   
+                                     l0OXOd0NNNNNNNWNNNXXK0Okxxdoolc:ckXX0Okko:::,,,,,,,,,,,,,,';kOdo;'''.                  
+                                     'kOOXxxNWNK0OOkxdooc:;,,,,,,,;,,':OXKOkkxc;:;,',',,,,,,,,,,'l0kdc,''.                  
+                          ,,          'dxxkdOW0ollllol;;;;;;;;;,,,,,,,'lKXOkxkd:::;,',,,,,,,,,,,';O0xo;''..                 
+                         'ol         .cdo:lloK0ddc:::ol;,,;,,',;,;;;;,,,dXKOxxxl;::;,,,,,,,,,,,,''oKOd:.....                
+                          ,'       .:OKOd:...cdccdko;;:;,,;lolll;;;,;;,,:kKOkxkxc:::,,,,,,,,,,,,,',loc;,'....               
+                          ,'      ,xKOxd:.   .oxoodoc;,,,',cdc;::,;,,;,,'cOOkkxkd:::;,,,,,,,,,,,,,''oOdl:'..                
+                          ,     .oK0xo:.   .'dKOl;;lxxc;,,,';c:ldldo:;,,,,oOkkkxxl;::;',,,,,,,,,,,,'cOkoc,...               
+                    ,:cllclc:::;lxdl:..  .:do::cooc:ddc;,,,,,;;;::::;;,',';xOkkxxdc;::,,,,,,,,,,,,,'cOxl:,''.              
+                  ckKNWWNNNXXXXK0ko:,.  .cxo,..ckkkd:;cl,',,,'',,,;::;,',,'ckOxdddo:::;,,,,,,,,,,,,,'cOxl:,''.              
+                 c0KKKKKKKKKKKK0Odlc:'   ......;xkl:lcoxc,,',,',;''ldlllllclddollllc::;,''',,,,,,,',.,xkdl;''.              
+                 dNWNXNNNNNNXXNN0olc;c;..:::cc,..;okOocol;,','.....,::ccccllllllc:cllccc:::;;:;;;,,'..coc;'.....            
+               xxkNKl:xXNNKl:oOK0oc:lxl,,,.....'oxlc:,..,,,,''.....',,,,,,;;;;;::,;::::::cccclccc::;,;,',,,,,,,'''.         
+                :xNKocxXNNKo:dOKOlc;;c,.     .cdo:.'ll,.:x:''.....',,,,,''''',,,''',,,,,,,,;;;;;;;;;,,,..cl;,,,,,','.       
+                 oNWNKKKK0000XXXklc:,;'   .;ll:,.  .d0d::l;,,,:lolc:;;,,,'',,;,,'',,,,,,,,,,,',,',,,'''.:l,,,,,,'''',.      
+                 lNWXOkxxxxdkKXXklccc:,  .:l:'.     .xNOxdodk0KOxxol:,,;clcc::;,,,,,,,;;;;,,,,,,,,,'.'.'lc,,,,:,.',','      
+                 'coddddxxddddooc;,;;     ..         .kWXXXXXXKoldcol,'':oxxxddollc:;,,,''''',,;,,''''.'lc,,'''..''',.      
+                       ,:;,''.                        'ONXXXXXKklol:cl;';ldddddddddolc;;;,''......  .....,;,,,,,','.        
+                       cxoc:;'                         ,KNXXXXK0kolcclcclodddddddddolc;;;,''......  .................        
+               .'cdkOklokocc:,,,'',;::;,.               ,k0KXXKKK00Okkxxddddddoooolc:;,''... .....        ........          
+        ..;clc;lOXXXXKxddoccclllddxdll:;;,'...            ..'''''''''..''''...........    ........                          
+        ;ONWNkx0KKKKKKKKK000000KKK0d:;,:kXK0kl.                        .'.........................                          
+        'oKN0dkWWK000KKKKK0K000XXK0o;;'cOK0Ol'.                        .',;:::;,''...... .........                          
+        .'lkxlkWXdcc::::ccllclokKK0o;,':kkkl'..                 .....  .,;;:cc:;'.....................                      
+      ..lxc;;,dNXdc:codoccc::ccxKK0o;,.':c:',:;'             .cxO0Oo::c;,;::lll:,................''''.                      
+     .;k0d:. .oNKdc:lkkxolo:;ccxKK0o:;,,'.  'odc,.          ,kKXX0olxxl;'.,::::;,................'''''.                     
+    .cKKx:.   oNKd:;cdlc::c;:ccxKK0o::;:'    .dOo;.        ,OKXNXol0X0kxdlloooool:;;,,',;:cc:,'......',,,,,,......          
+   .,dxo;.   .oXKd:;:dkxxxdolc:d00Oo::;:'     .ox:'.      .dKKXXO:l00000OOOOOOOOOOOkxxxxxkxl;'.....'cdddol:,,,,,,,'.        
+   ,lc,.     .oXKdc::lxkkdlcc:;oOOOo::;:'       ',,,.     'O0O00x;l0000Okkkkkkkkkxdddddddo:,,..,;':xOOkkx:,,,,,,,,,,.       
+  .d0d;.     .lKKkolloxkkdlllllxOOko::;:.       .:dl;     ,0K0O0d,;xOkkkkkkkkkxxxxdddddddo;,...,.:OOOkxx:',,'..'',,,'       
+  ,KKx,       cO000OOOOOkkkkkkkkkOko:;,,.        cKxc.    ;0KO00d,.;dxddxxxxdddddolooooooc;'.....dOxxxkl',,'.''..',,'.      
+  cX0o.       ,xkkkkkkkkkxxxxxxxxxxl;,,,.        'OOo;   .xNXKKx:,'.,ldooooooollllcllclllc,'....'xxoodd:',,.';,..',,.       
+  ,ol;.       .xOkOOOOkkkkkkkkkkkxxl::;.         .co:,. .dXXXXk:,,''..,:ccccccccccc:::::::,'... ,kxdddl:',,'.''..','.       
+.:dxdc.        ':ccc::::ccccccccccc;'..          .;:,,'.lXXXX0c,;,'','.......'',,,,;;;;,;;;,,'..dOxdxd:'',,,'.''',,.        
+lX0xkOd,         ;:.'.         ...''.           :kxodxl;cOXNKl,;;;,,'.               ..........dOxddd:,'',,,,,,'.         
+'OKc..ckc.       'kd:;.          :o:;.          'Ox..'lo,'lOOo;;;;;;,.                        .oOxdddc','',,,,,,'.           
+.cx:. 'c.        l0dl,           l0dl,          .c;  .:c',ll:,,;,,;,.                        .lOxdddl:',,,'''...             
+ .             .kOoc.           :Oxl;.              .;clkkoc;,,',,.                         ckdoddl;,,,,,,'.                
+             ..:xoc,            ;xo:,.             .dKKXKxo:,''''.                         .clc:cc:',,,''.                 
+            'xKK0Oo;..         ,dkxdl;..          .xXXX0xo:,,;,..                          ,oddoc,''',','.                  
+.            .o0KXX0o;'.       .:dKXX0x;'.       ...ckO0koo;',;,.                           .okkkdc,''''''.                   
+;.           'xKXXXOl:;'       'cxKKK0xc,'.    .,oo:;clc;,,',;,..                          .okkkdc,','..'....        .........
+::dxkkOOOOkOdoOKXXKkc:;:dOOOOOkocd0000kl,';dOOkodo;',;;;;cc:;;,;cllllllccc:::clllllllcccc::dkkxdc:',,,'..',;;;;,,,;;;;;;;;''''
+l:coodkXWWWWOd0KKKKxc:;:0WWWWWXdcdO0OOko;,,oXWKdlokkkkxdooc:;;.';::;coodooooddxolllc:cc:;;okxxxc:',,,''.';;;;;,,,,,;:;;;:;''..
+l::dxk0NWWWNkx0KKKKd::;:OWWWWWXxcdOOOOkdc,,:ONKd;,:cloooc;;;:;,;:;'';:cc::::;;;,,,,,,,,,,,;::c:,'''..'..''''..','''''''''.',;,
+ddx0K00OkKNKxkKKKK0d::;c0WWWWWXxcdOOOOkxl;;,oXNKdlc:,''''.',;;;,'........'.''''','''.';lc'',;;'''..,;;,,,,,,,...........,:cc::
+NKkddxOOO00xdOKKKKOl;:;:xWWWWNKdcokOOkkxo:,.;ONWWNNKkollllc:,'',,;::::::ccccccc::cllc:lo:,,,,,'';;:;,;:cc:;;,'.........,cc,;;,
+OOxooddokNNxd00OkOkl;,,:OWWWWXkolokOkxxdoc,';ONNNNXXXX0kkkkkkkkOOOxddkOOkkkkxxxoodddo::::llccc::;,;;;;;;,,,,,,',,'.....,:,,:;,
+O0OxddxxONNdcodddddc,'.,ldxkOkdooldkdoddo:,.':cccclllloooololloool:;:cllc::cc::::;,,,'...''''',,'.',,,''',,,,,:;,,,'....,;,,,,
+WNWWWWWWWWWk;,'''.........',,;;;;,,,,,,,'............'''''',,,;::,''''.'''',,'''''''''...'''.':::;'.......'',:c,,:cc::;;,,,,,,
+                </div>
+
+                <div class="info">
+                    <div class="info-line">
+                        <span class="info-label">User</span>
+                        <span class="info-value">Saahas Yechuri</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Location</span>
+                        <span class="info-value">San Francisco, CA</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Contact</span>
+                        <span class="info-value">
+                            <a href="mailto:saahas@gatech.edu" class="link">saahas@gatech.edu</a>
+                            | 484-983-4127
+                        </span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Links</span>
+                        <span class="info-value">
+                            <a href="https://github.com/Suputra/" class="link">github/Suputra</a>
+                            |
+                            <a href="https://linkedin.com/in/saahas/" class="link">linkedin/saahas</a>
+                            |
+                            <a href="https://youtube.com/@saahasY" class="link">youtube/@saahasY</a>
+                        </span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Bio</span>
+                        <span class="info-value">
+                            Driven engineer working on the boundary between hardware and software. 
+                            Experienced with designing and building mechatronic and robotic systems, 
+                            building and scaling data analysis pipelines, and FPGA design. In my free time, 
+                            I love to read (big fan of hard sci-fi and the future of humanity), bike, and hike!
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="command-block">
+                <div class="command">grep -A 2 <span class="title">"experience"</span> ~/career.md | less</div>
+                <div class="output">
+                    <div class="section-heading">
+                        Hardware/Software Engineer @ Zoox
+                    </div>
+                    <div class="period">Jan 2022 – Present | Foster City, CA</div>
+                    <ul>
+                        <li>
+                            Led development of <span class="keyword">vehicle network emulator</span> platform (<span class="keyword">NST</span>), integrating <span class="keyword">hardware</span>, <span class="keyword">firmware</span>, and <span class="keyword">software</span> to simulate and validate critical <span class="keyword">network traffic patterns</span>. Drove adoption across multiple teams for <span class="keyword">testing</span> and <span class="keyword">validation</span>.
+                        </li>
+                        <li>
+                            Engineered <span class="keyword">data analysis pipeline</span> processing <span class="keyword">100GB+</span> of vehicle network data every 2 weeks; created company-wide '<span class="keyword">StreamDB</span>' standard now serving as <span class="keyword">source of truth</span> for vehicle network flows at Zoox. <span class="keyword">StreamDB</span> is used in the <span class="keyword">ethernet architecture</span>, <span class="keyword">product security</span>, and <span class="keyword">bandwidth testing</span>.
+                        </li>
+                        <li>
+                            Designed and implemented comprehensive <span class="keyword">time synchronization</span> test framework; modified <span class="keyword">linuxptp</span> (<span class="keyword">ptp4l</span>/<span class="keyword">phc2sys</span>) for enhanced <span class="keyword">control</span> and <span class="keyword">filtering</span> of noisy <span class="keyword">correction data</span>. Created <span class="keyword">testbench</span> to characterize <span class="keyword">clock drift</span> across vehicle systems.
+                        </li>
+                        <li>
+                            Resolved critical <span class="keyword">vehicle bringup</span> blocker by debugging <span class="keyword">ethernet link failures</span> to <span class="keyword">telecommunications unit</span>; identified root cause in <span class="keyword">PHY polarity swap detection</span>, enabling reliable <span class="keyword">high-speed communication</span>.
+                        </li>
+                        <li>
+                            Developed <span class="keyword">4-layer automotive ethernet</span> test board matching <span class="keyword">BaseT impedance</span> standards; enabled systematic <span class="keyword">fault injection</span> testing that uncovered critical <span class="keyword">network resilience</span> issues.
+                        </li>
+                        <li>
+                            Maintain and enhance <span class="keyword">manufacturing line</span> validation suite for <span class="keyword">telecommunications</span> and <span class="keyword">time synchronization</span> systems, ensuring <span class="keyword">production quality</span> and <span class="keyword">reliability</span>.
+                        </li>
+                    </ul>
+
+                    <div class="section-heading">
+                        Undergraduate Researcher @ Bio-Robotics Lab
+                    </div>
+                    <div class="period">Aug 2022 – Sep 2023 | Atlanta, GA</div>
+                    <ul>
+                        <li>
+                            Developed <span class="keyword">FPGA-based hardware accelerators</span> for <span class="keyword">Homomorphic Encryption</span> on a <span class="keyword">Xilinx Zynq ZC702</span>, focusing on <span class="keyword">key generation</span>, encryption, and <span class="keyword">large integer arithmetic</span>. Created a novel <span class="keyword">key-switching scheme</span> for faster homomorphic operations.
+                        </li>
+                        <li>
+                            Designed and optimized <span class="keyword">Verilog modules</span>, including an implementation of the <span class="keyword">Miller-Rabin primality test</span>, <span class="keyword">pseudorandom number generators</span> based on <span class="keyword">LFSRs</span>, and efficient <span class="keyword">modular exponentiators</span>.
+                        </li>
+                        <li>
+                            Interfaced FPGA fabric with <span class="keyword">Zynq PS</span> using <span class="keyword">AXI IP cores</span> and <span class="keyword">C code</span>. Integrated <span class="keyword">ADC modules</span> to process real-world sensor data securely.
+                        </li>
+                        <li>
+                            Extensively debugged and validated designs using <span class="keyword">Xilinx Vivado's Simulation Suite</span> and <span class="keyword">Integrated Logic Analyzer</span> (ILA) on both simulated and real hardware.
+                        </li>
+                    </ul>
+
+                    <div class="section-heading">
+                        Student Assistant @ STEM@GTRI
+                    </div>
+                    <div class="period">June 2021 – July 2021 | Atlanta, GA</div>
+                    <ul>
+                        <li>
+                            Mentored <span class="keyword">10 Students</span> in the development of an <span class="keyword">autonomous robotic arm</span> with <span class="keyword">computer vision</span> and high level control.
+                        </li>
+                        <li>
+                            Started from basic <span class="keyword">Python</span> lessons, and got all the way to control using <span class="keyword">DH-parameters</span>, <span class="keyword">Finite State Machines</span>, and <span class="keyword">Computer Vision</span>.
+                        </li>
+                        <li>
+                            Wrote <span class="keyword">25+ example scripts</span> and <span class="keyword">15+ lessons</span> to help facilitate student understanding of various topics.
+                        </li>
+                        <li>
+                            Wrote a <span class="keyword">ROS package</span> to integrate <span class="keyword">computer vision</span>, <span class="keyword">inverse kinematics</span>, and <span class="keyword">control</span> into a simple template stack for the students.
+                        </li>
+                    </ul>
+
+                    <div class="section-heading">
+                        R&D Engineering Intern @ nth Solutions LLC
+                    </div>
+                    <div class="period">Feb 2018 – Aug 2019 | Exton, PA</div>
+                    <ul>
+                        <li>
+                            <span class="keyword">3D Modeled</span> and printed parts for a variety of applications, including product enclosures, accessories, and test rigs. Designed and maintained <span class="keyword">25+ 3D printed models</span>, each with <span class="keyword">10+ iterations</span>.
+                        </li>
+                        <li>
+                            Wrote documentation and drew diagrams for <span class="keyword">patents</span>. Experienced with <span class="keyword">technical writing</span> and research.
+                        </li>
+                        <li>
+                            Programmed and range tested <span class="keyword">ESP8266</span> and <span class="keyword">LoRa</span> modules to add <span class="keyword">IoT functionality</span> to a pre-existing product.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="command-block">
+                <div class="command"><span class="title">skills</span> list --format=compact | bat -p --style=grid</div>
+                <div class="output">
+                    <div class="tree-output">
+<pre>
+┌─ Programming ──────────────┐ ┌─ Domain Knowledge ─────┐ ┌─ Tools & Software ───────┐ 
+│ Python      [██████████] E │ │ Networking & OSI       │ │ Hardware Design          │ 
+│ C           [████████──] A │ │ ├─ TCP/IP Stack        │ │ ├─ Vivado/Vitis          │ 
+│ C++         [██████────] I │ │ ├─ Ethernet L1-4       │ │ └─ Altium                │ 
+│ Verilog     [██████────] I │ │ ├─ PTP/NTP             │ │ Simulation               │ 
+│ CUDA        [██████────] I │ │ └─ DDS                 │ │ ├─ MATLAB/Simulink       │ 
+│ Javascript  [██████────] I │ │ Robotics & Control     │ │ ├─ GTKWave               │ 
+│ Julia       [██████────] I │ │ ├─ IK/FK               │ │ └─ Isaac Lab/Sim         │ 
+│ Scala       [██████────] I │ │ ├─ D-H Parameters      │ │ CAD/CAM                  │ 
+│ ROS         [██████────] I │ │ ├─ PID Control         │ │ ├─ Inventor              │ 
+│ Linux/Unix  [████████──] A │ │ └─ RL for Control      │ │ ├─ SolidWorks            │ 
+│ bash        [████████──] A │ │ Computer Vision        │ │ └─ Onshape               │ 
+│ bazel       [████████──] A │ │ ├─ Calibration         │ └──────────────────────────┘ 
+│ OpenCV      [██████────] I │ │ ├─ CNNs                │ ┌─ Practical Skills ───────┐ 
+│ PyTorch     [██████────] I │ │ └─ SLAM                │ │ Fabrication              │ 
+│ Polars      [████████──] A │ │ Data Processing        │ │ ├─ 3D Printing (FDM/SLA) │ 
+│ Matplotlib  [██████████] E │ │ ├─ MapReduce           │ │ ├─ Laser Cutting         │ 
+│ SciPy       [██████────] I │ │ └─ Distributed Systems │ │ ├─ Wood/Metal shop tools │ 
+│ NumPy       [██████████] E │ │                        │ │ └─ Welding               │ 
+│                            │ │                        │ │ Electronics              │ 
+│                            │ │                        │ │ ├─ THT/SMT Soldering     │ 
+│                            │ │                        │ │ ├─ PCB Assembly          │ 
+│                            │ │                        │ │ └─ Test Equipment        │ 
+└────────────────────────────┘ └────────────────────────┘ └──────────────────────────┘</pre>
+</div>
+</div>
+</div>
+<div class="command-block">
+                <div class="command">tree <span class="title">~/projects</span> --charset=ascii -L 3</div>
+                <div class="output">
+                    <div class="tree-output">/projects
+├── <span class="subtitle">FPGA Based Ethernet MAC/PHY</span>
+│   └── description.txt
+│       Designed and Tested <span class="keyword">Verilog</span> modules for a Simple <span class="keyword">10BaseT</span> MAC and PHY 
+│       following <span class="keyword">IEEE 802.3</span> to transmit fixed Layer 2 Ethernet packets. Debugged 
+│       and Tested using <span class="keyword">Verilator</span> and <span class="keyword">gtkwave</span>. Working on expanding to Layer 3+
+├── <span class="subtitle">Chess Robot</span>
+│   └── description.txt
+│       Using an old 3d printer frame, built a chess robot. Designed <span class="keyword">motor control</span> 
+│       circuits, wrote <span class="keyword">Firmware</span> for low level control, and code for move detection 
+│       using <span class="keyword">fiducial markers</span> (<span class="keyword">AprilTags</span>) and generation. Demo videos on Youtube.
+└── <span class="subtitle">Gyro-Boat</span>
+    └── description.txt
+        Built a model boat stabilized by a <span class="keyword">gyroscope</span>, inspired by Sperry's 
+        <span class="keyword">Gyro-Stabilizer</span>. Demo videos on Youtube.
+3 directories, 6 files</pre></div>
+                </div>
+            </div>
+            <div class="command-block">
+                <div class="command">cat <span class="title">~/awards</span> | column -t -s ';' | sed '1,2s/./-/g'</div>
+                <div class="output">
+                    <div class="tree-output"><pre>                                            Awards & Recognition
+---------------------------------------------------------------------------------------------------------------
+Year  Award                                  Organization  Details
+---------------------------------------------------------------------------------------------------------------
+2024  <span class="subtitle">Hack for Social Impact (1st Place)</span>     UNCCD         Developed "<span class="keyword">Arboren</span>" to help UN analysts visualize 
+                                                           and analyze <span class="keyword">desertification data</span>. Presented at 
+                                                           <span class="keyword">COP 16</span> in Riyadh.
+2023  <span class="subtitle">SII2024 Conference Paper</span>               IEEE          <span class="keyword">FPGA-based sensor encryption</span> system paper accepted 
+                                                           to <span class="keyword">Symposium on System Integration</span> in Ha Long Bay,
+                                                           Vietnam.
+2022  <span class="subtitle">President's Undergraduate</span>              Georgia       Funded to do research on <span class="keyword">Homomorphic Encryption</span> with 
+      <span class="subtitle">Research Award (PURA)</span>                  Tech          <span class="keyword">FPGAs</span>. Mentored a student on <span class="keyword">FPGA development</span>, and 
+                                                           presented findings at a research symposium.
+2021  <span class="subtitle">NASA SpaceApps</span>                         NASA          Developed novel <span class="keyword">space component separation system</span>,
+      <span class="subtitle">Best Use of Technology</span>                               used <span class="keyword">electromagnetic</span> and <span class="keyword">hydraulic</span> principles to 
+                                                           apply a <span class="keyword">16kN preload</span>.
+2020  <span class="subtitle">MIT COVID-19 Challenge</span>                 MIT           Created "<span class="keyword">COValert</span>" <span class="keyword">SMS chatbot</span> for rural COVID 
+      <span class="subtitle">Winning Team</span>                                         triage for areas without internet access.  
+---------------------------------------------------------------------------------------------------------------</pre></div>
+                </div>
+            </div>
+            <div class="command-block">
+                <div class="command">ssh guest@uspto ls -1 <span class="title">~/patents</span> | grep -l "Saahas Yechuri" | bat --style=grid</div>
+                <div class="output">
+                    <div class="tree-output"><pre>───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: US-11287348-B2.pdf
+───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────
+<span class="subtitle">Tire Balance Measurement</span>: Apparatus for measuring <span class="keyword">imbalance forces</span> of a <span class="keyword">tire/hub assembly</span> of a vehicle during 
+motion of the vehicle
+(Issued Mar 29, 2022)
+───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: US-10701266-B2.pdf
+───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────
+<span class="subtitle">Video File Reader</span>: Method for reading out contents of a <span class="keyword">video file</span> having a <span class="keyword">predefined video file format</span>
+(Issued Jun 30, 2020)
+───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: US-10469750-B1.pdf
+───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────
+<span class="subtitle">Motion Data Embedding</span>: Method for embedding <span class="keyword">motion data</span> of an object into a <span class="keyword">video file</span> to allow for 
+<span class="keyword">synchronized visualization</span> of the motion data
+(Issued Nov 5, 2019)
+───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: US-10284752-B1.pdf
+───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────
+<span class="subtitle">Video-IMU Synchronization</span>: Method for determining a <span class="keyword">start offset</span> between a <span class="keyword">video recording device</span> and an 
+<span class="keyword">inertial measurement unit</span>
+(Issued May 7, 2019)</pre></div>
+                </div>
+            </div>
+            <div class="command-block">
+                <div class="command">cat <span class="title">education.yml</span></div>
+                <div class="output">
+                    <div class="tree-output"><pre>institution: <span class="subtitle">Georgia Institute of Technology</span>
+degree: <span class="subtitle">BS in Mechanical Engineering</span>
+gpa: <span class="keyword">4.0</span>
+coursework:
+  - <span class="keyword">Control of Dynamic Systems</span>
+  - <span class="keyword">Robotics</span>
+  - <span class="keyword">Mechatronics</span>
+  - <span class="keyword">Machine Design</span>
+  - <span class="keyword">System Dynamics</span>
+  - <span class="keyword">Thermal and Fluids Laboratory</span>
+  - <span class="keyword">Experimental Methods</span>
+  - <span class="keyword">Heat Transfer</span>
+  - <span class="keyword">Fluid Mechanics</span>
+  - <span class="keyword">Thermodynamics</span>
+  - <span class="keyword">Numerical Methods</span>
+  - <span class="keyword">Deformable Bodies</span>
+  - <span class="keyword">Dynamics</span>
+  - <span class="keyword">Statics</span>
+  - <span class="keyword">Digital/Analog Circuits</span></pre></div>
+                </div>
+            </div>
+
+            <div class="prompt">
+                user@saahas-pc<span>:~$</span> <span class="cursor"></span>
+            </div>
+        </div>
+    </body>
+</html>

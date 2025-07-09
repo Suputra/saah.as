@@ -1,3 +1,4 @@
 - incandescence
-	- riding the crocodile
+	- related novella: riding the crocodile
+- pushing ice
 - 
