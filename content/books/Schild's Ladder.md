@@ -1,0 +1,1 @@
+Schild's ladder is about the possible worlds we could live in, and how we take logical steps.

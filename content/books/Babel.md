@@ -1,3 +1,1 @@
----
-draft: "true"
----
+Babel is a book about exploitation and revolution. 

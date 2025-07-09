@@ -1,5 +1,1 @@
----
-draft: "true"
----
-
-
+Hardware is material, so it is hard. Software is immaterial, intangible, and therefore it is easy.

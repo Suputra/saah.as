@@ -1,0 +1,4 @@
+(I haven't come up with a good name for this yet)
+I have a distinct memories of being quite weirded out by the fact that I was alive and experiencing things when I was younger. The question that would pop into my head is: why? Why was I even experiencing anything at all? I think this somewhat relates to my relationship with mirrors and myself when I was younger - I didn't avoid them, but I just didn't see any importance in them. When I looked into the mirror, it was almost like looking at another person - my own face felt foreign to me. 
+
+This question is one that I've almost forgotten about. I think this means that I've become comfortable being in my body - I now identify myself with my body and mind more, but I don't know if that's a good thing.

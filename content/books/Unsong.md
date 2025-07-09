@@ -1,0 +1,1 @@
+Unsong is a book about evil. Like HPMOR, it deals with places of unlimited suffering. 

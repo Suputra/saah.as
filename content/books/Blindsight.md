@@ -1,3 +1,1 @@
----
-draft: "true"
----
+Blindsight is about senses and cognition and the role of consciousness in the evolution of the way we see the world. 

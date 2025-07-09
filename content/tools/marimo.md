@@ -1,0 +1,1 @@
+Marimo looks really cool as a jupyter replacement, and it has a lot of features that I like. I have experimented with it slightly, but I need to look into it more.
