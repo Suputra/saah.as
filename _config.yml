@@ -5,6 +5,7 @@ plugins:
 # Include files without extensions
 include:
   - "_*"
+  - "content/x/*.html"
 
 # Exclude build files
 exclude:
@@ -20,3 +21,9 @@ defaults:
       path: "x"
     values:
       permalink: /:path/ 
+  - scope:
+      path: "content/x"
+      type: "pages"
+    values:
+      permalink: /x/:basename/
+      layout: null 
