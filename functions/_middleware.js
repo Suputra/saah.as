@@ -1,5 +1,5 @@
 export async function onRequest(context) {
-  const { request, next } = context;
+  const { request, next, env } = context;
   
   // Get the URL path
   const url = new URL(request.url);
@@ -22,11 +22,26 @@ export async function onRequest(context) {
         newHeaders.set(key, value);
       }
       
+      // Get deployment info for cache busting
+      const deploymentId = env.CF_PAGES_COMMIT_SHA || env.CF_PAGES_BRANCH || 'unknown';
+      const currentETag = response.headers.get('ETag') || '';
+      
+      // Create deployment-specific ETag
+      const deploymentETag = `"${deploymentId}-${currentETag.replace(/"/g, '')}"`;
+      
       // Override specific headers for HTML content
       newHeaders.set('Content-Type', 'text/html; charset=utf-8');
       newHeaders.set('X-Frame-Options', 'SAMEORIGIN');
       
+      // Smart caching: cache for 1 hour but use deployment-specific ETag
+      newHeaders.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+      newHeaders.set('ETag', deploymentETag);
+      
+      // Add deployment info for debugging
+      newHeaders.set('X-Deployment-ID', deploymentId);
+      
       console.log('Setting Content-Type to: text/html; charset=utf-8');
+      console.log('Setting ETag to:', deploymentETag);
       
       // Create a new response with updated headers
       const newResponse = new Response(response.body, {
