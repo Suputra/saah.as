@@ -4,8 +4,8 @@ export async function onRequest(context) {
   // Get the URL path
   const url = new URL(request.url);
   
-  // Check if this is an interactive file request
-  if (url.pathname.startsWith('/interactive/')) {
+  // Check if this is an x file request
+  if (url.pathname.startsWith('/x/')) {
     const response = await next();
     
     // Create a new response with updated headers

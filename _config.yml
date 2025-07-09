@@ -17,6 +17,6 @@ exclude:
 # Serve files without extensions as HTML
 defaults:
   - scope:
-      path: "interactive"
+      path: "x"
     values:
       permalink: /:path/ 
