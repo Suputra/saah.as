@@ -101,4 +101,4 @@ Hi, I'm Saahas, and these are my thoughts - some real and some still just in my 
 This website has a lot of things in progress. Things aren't going to look perfect, and I've accepted that - There will be a lot of pages that have a title but pretty much no content - I think of these as post it notes for the future. Things will fill out eventually, just not necessarily when I expect them to.
 
 I've been putting some thought into [[the future of robotics]]. The big project that I want to work on over the next year is improving [[robot efficiency]].
-The things on my mind right now are doing some home improvements and working on [[mechanical life]]. I also have a [[resume]], and you can see my vision for my life in [[life]] (WIP).
+The things on my mind right now are doing some home improvements and working on [[mechanical life]]. I also have a [[resume]], and you can see my vision for my life in [[life-timeline]] (WIP).
