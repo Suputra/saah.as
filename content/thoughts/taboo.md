@@ -1,0 +1,1 @@
+Taboos are in some ways the most ancient cultural bedrock of all people. To be anti-taboo (be willing to talk about taboo subjects, though not necessarily act on them) is therefore one of the most ancient anti-establishment traditions. 
