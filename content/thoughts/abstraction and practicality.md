@@ -1,0 +1,3 @@
+I struggle between these two. The highlands and the lowlands as described in [[Zen and the Art of Motorcycle Maintenance]]. 
+
+Abstraction is a useful tool for generalizing and finding structure and analogy that can be used in multiple places. However, I struggle with it once it gets too general and lofty. It feels disconnected from the real world, and goes to a place where people with flowery enough words can say things that don't mean much. 
