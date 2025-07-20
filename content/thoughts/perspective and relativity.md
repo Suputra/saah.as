@@ -1,0 +1,3 @@
+Permutation city has some interesting ideas, one of the main ones I interpret as consciousness being substrate independent, and substrate independent to an extreme degree. It is not even something local in space-time - your substrate hardware doesn't have to be close together, or even run in order. 
+
+A theory of relativity but for consciousness. Outside circumstances may change but our perspective / view of the world remains the same (if this were true). What does that say about the world we live in? What about causality?

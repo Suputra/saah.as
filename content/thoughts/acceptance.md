@@ -1,0 +1,3 @@
+I've accepted a lot of things now. I think being comfortable with accepting a lot of things is good for you. With it comes a certain calmness and gentleness of being comfortable with the good, the bad, and everything in between. This is not a static, in place feeling, but a feeling of acceptance and carrying on.
+
+"Sthithapragna" (स्थितप्रज्ञ, or స్థితప్రజ్ఞత) is a term I've learned from my brother which relates to this. It means a state of gentle but firm acceptance and continuing. There are many parallels to stoicism - but I don't think it means you should suppress emotions or be unemotive, but rather accept that emotion freely, and let it permeate through you, but don't let it control you.

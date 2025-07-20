@@ -1,0 +1,3 @@
+I have long thought that determinism is real, yet obviously we struggle with reconciling this with free will. My answer to this is that free will is somehow an illusion, but I just don't know how. Maybe the idea of experience is real, but conscious choice is not, we're just sitting in the theater of our mind watching the show go on. We've just invested and identified with the main character so much that we think we're playing a game. 
+
+From a physical perspective I am not actually sure what the current view is on determinism. Given that everything is probabilistic at the quantum scale, what does that actually mean for us at the non-quantum level? Is the world a chaotic but completely deterministic world, or do we truly not know, and *cannot* know what is happening next?
