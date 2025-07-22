@@ -28,3 +28,5 @@ dynamic = chaotically and freely charging forward, with no memory
 static = preserving and maintaining order, with memory
 
 latching - latching dynamic patterns onto static ones to keep new ideas.
+
+Is the mind inseperable from society? Can we say that people who do not live in a society are conscious? The kneejerk reaction would be no, but the barriers between us and a "feral" human who grew up with no connection to society are perhaps comparable to the barriers between us and mammals such as cows. So why does society say one obviously doesn't have consciousness but another does? There are many ways to slice this - but there is a fundamental logical paradoxes between the common understanding of consciousness and what beings possess it. I think people in general err too much on the side of not giving consciousness 
